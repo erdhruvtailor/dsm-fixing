@@ -6,6 +6,7 @@ import compression from 'compression';
 import 'dotenv/config';
 
 import productRoutes from './routes/productRoutes.js';
+import matrimonialProfileRoutes from './routes/matrimonialProfileRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 const __dirname = path.resolve(); // Set {__dirname} to current working directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use('/api/v1/matrimonialProfile', matrimonialProfileRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);

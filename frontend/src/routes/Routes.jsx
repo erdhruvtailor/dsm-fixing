@@ -1,8 +1,10 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
-import ProductPage from '../pages/ProductPage';
 import HomePage from '../pages/HomePage';
+import MatrimonialProfilePage from '../pages/MatrimonialProfilePage';
+import MatrimonialFormPage from '../pages/MatrimonialFormPage';
+import ProductPage from '../pages/ProductPage';
 import CartPage from '../pages/CartPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
@@ -40,6 +42,38 @@ const router = createBrowserRouter([
         element: <HomePage />
       },
       {
+        path: '/login',
+        element: <LoginPage />
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />
+      },
+      {
+        path: '/matrimonialProfile',
+        element: <MatrimonialProfilePage />
+      },
+      {
+        path: '/matrimonialProfile/create',
+        element: <MatrimonialFormPage />
+      },
+      {
+        path: '/matrimonialProfile/update/:id',
+        element: <MatrimonialFormPage />
+      },
+      // {
+      //   path: '/admin/product/create',
+      //   element: <ProductFormPage />
+      // },
+      // {
+      //   path: '/admin/product/update/:id',
+      //   element: <ProductFormPage />
+      // },
+      // {
+      //   path: '/admin/product-list',
+      //   element: <ProductListPage />
+      // },
+      {
         path: '/product/:id',
         element: <ProductPage />
       },
@@ -54,14 +88,6 @@ const router = createBrowserRouter([
       {
         path: '/reset-password/:id/:token',
         element: <ResetPasswordPage />
-      },
-      {
-        path: '/login',
-        element: <LoginPage />
-      },
-      {
-        path: '/register',
-        element: <RegisterPage />
       },
       {
         path: '',

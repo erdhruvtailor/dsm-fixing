@@ -10,12 +10,14 @@ import {
   Form,
   ListGroupItem
 } from 'react-bootstrap';
+
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useGetProductDetailsQuery,
   useCreateProductReviewMutation
 } from '../slices/productsApiSlice';
+
 import { addToCart } from '../slices/cartSlice';
 import { toast } from 'react-toastify';
 import Rating from '../components/Rating';
@@ -24,6 +26,7 @@ import Message from '../components/Message';
 import Meta from '../components/Meta';
 import { addCurrency } from '../utils/addCurrency';
 import Reviews from '../components/Reviews';
+
 
 const ProductPage = () => {
   const { id: productId } = useParams();
