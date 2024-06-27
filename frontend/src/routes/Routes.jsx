@@ -54,6 +54,10 @@ const router = createBrowserRouter([
         element: <MatrimonialProfilePage />
       },
       {
+        path: '/matrimonialProfile/:id',
+        element: <MatrimonialProfilePage />
+      },
+      {
         path: '/matrimonialProfile/create',
         element: <MatrimonialFormPage />
       },

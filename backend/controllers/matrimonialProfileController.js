@@ -1,19 +1,40 @@
 import MatrimonialProfile from '../models/matrimonialProfileModel.js';
 import { deleteFile } from '../utils/file.js';
+import User from "../models/userModel.js";
+
+
+// @desc     Fetch all MatrimonialProfile
+// @method   GET
+``// @endpoint /api/v1/MatrimonialProfile/
+// @access   Public
+const getMatrimonialAllProfile = async (req, res, next) => {
+
+  try {
+    // const matrimonialProfiles = await MatrimonialProfile.find({ user: req.user._id});
+    const matrimonialProfiles = await MatrimonialProfile.find();
+
+    if (!matrimonialProfiles || matrimonialProfiles.length === 0) {
+      res.statusCode = 404;
+      throw new Error('No matrimonial profiles found!');
+    }
+    res.status(200).json(matrimonialProfiles);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 // @desc     Fetch Single Product
 // @method   GET
 // @endpoint /api/v1/MatrimonialProfile/:id
 // @access   Public
 const getMatrimonialProfile = async (req, res, next) => {
+
   try {
     const { id: matrimonialProfileId } = req.params;
 
-    res.status(200).json(req.params);
-    return false;
-
-
     const matrimonialProfile = await MatrimonialProfile.findById(matrimonialProfileId);
+
 
     if (!matrimonialProfile) {
       res.statusCode = 404;
@@ -190,5 +211,6 @@ export {
   getMatrimonialProfile,
   createMatrimonialProfile,
   updateMatrimonialProfile,
-  deleteMatrimonialProfile
+  deleteMatrimonialProfile,
+  getMatrimonialAllProfile
 };

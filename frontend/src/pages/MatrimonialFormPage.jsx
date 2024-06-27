@@ -13,7 +13,6 @@ import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
-import {matrimonialProfileApiSlice} from "../slices/matrimonialProfilesApiSlice";
 
 const MatrimonialProfilePage = () => {
   const { id: matrimonialProfileId } = useParams();
@@ -53,10 +52,10 @@ const MatrimonialProfilePage = () => {
   const {
     data: matrimonialProfile,
     isLoading,
-    error
+    errors
   } = isUpdateMode
     ? getMatrimonialProfileQueryResult
-    : { data: null, isLoading: false, error: null };
+    : { data: null, isLoading: false, errors: null };
 
   const [createMatrimonialProfile, { isLoading: isCreateMatrimonialProfileLoading }] =
     useCreateMatrimonialProfileMutation();
@@ -66,6 +65,7 @@ const MatrimonialProfilePage = () => {
       useUploadMatrimonialProfileImageMutation();
 
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isUpdateMode && matrimonialProfile) {
@@ -153,14 +153,15 @@ const MatrimonialProfilePage = () => {
         toast.success(data.message);
       } else {
         const { data } = await createMatrimonialProfile(matrimonialProfileData);
-
         toast.success(data.message);
       }
       navigate('/matrimonialProfile');
-    } catch (error) {
-      toast.error(error?.data?.message || error.error);
+    } catch (errors) {
+      toast.error(errors?.data?.message || errors.errors);
     }
   };
+
+
 
   return (
     <>
@@ -173,19 +174,18 @@ const MatrimonialProfilePage = () => {
         isUploadImageLoading) && <Loader />}
       {isLoading ? (
         <Loader />
-      ) : error ? (
+      ) : errors ? (
         <Message variant='danger'>
-          {error?.data?.message || error.error}
+          {errors?.data?.message || errors.errors}
         </Message>
       ) : (
         <FormContainer>
           <Meta title={'Matrimonial Profile Form'} />
-          <h1>{isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}</h1>
+          <h4>{isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}</h4>
 
           <Form onSubmit={submitHandler}>
 
-
-            <Form.Group controlId='image'>
+            <Form.Group controlId='image' className='attribute'>
               <Form.Label>Image</Form.Label>
               <Form.Control
                   type='file'
@@ -193,18 +193,17 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-
-            <Form.Group controlId='email'>
+            <Form.Group controlId='email' className='attribute'>
               <Form.Label>Email</Form.Label>
               <Form.Control
-                type='email'
-                placeholder='Enter email'
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                  type='email'
+                  placeholder='Enter email'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='fullName'>
+            <Form.Group controlId='fullName' className='attribute'>
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                   type='text'
@@ -214,37 +213,44 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='gender'>
-              <Form.Label>Gender</Form.Label>
-              <Form.Control
-                  type='text'
-                  placeholder='Enter gender'
-                  value={gender}
+            {/*gender*/}
+            <Form.Group className='attribute'>
+              <input
+                  type="radio"
+                  name="gender"
+                  value="male"
                   onChange={e => setGender(e.target.value)}
-              ></Form.Control>
+              /> Male
+
+              <input
+                  type="radio"
+                  name="gender"
+                  value="Female"
+                  onChange={e => setGender(e.target.value)}
+              /> Female
             </Form.Group>
 
-            <Form.Group controlId='birthDate'>
+            <Form.Group controlId='birthDate' className='attribute'>
               <Form.Label>Birth Date</Form.Label>
               <Form.Control
-                  type='text'
+                  type='date'
                   placeholder='Enter BirthDate'
                   value={birthDate}
                   onChange={e => setBirthDate(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='birthDate'>
+            <Form.Group controlId='birthDate' className='attribute'>
               <Form.Label>Birth Time</Form.Label>
               <Form.Control
-                  type='text'
+                  type='time'
                   placeholder='Enter birth Time'
                   value={birthTime}
                   onChange={e => setBirthTime(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='birthPlace'>
+            <Form.Group controlId='birthPlace' className='attribute'>
               <Form.Label>Birth Place</Form.Label>
               <Form.Control
                   type='text'
@@ -254,7 +260,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='height'>
+            <Form.Group controlId='height' className='attribute'>
               <Form.Label>Height</Form.Label>
               <Form.Control
                   type='text'
@@ -264,7 +270,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='weight'>
+            <Form.Group controlId='weight' className='attribute'>
               <Form.Label>Weight</Form.Label>
               <Form.Control
                   type='text'
@@ -274,7 +280,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='interests'>
+            <Form.Group controlId='interests' className='attribute'>
               <Form.Label>Interests</Form.Label>
               <Form.Control
                   type='text'
@@ -284,17 +290,26 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='currentMaritalStatus'>
-              <Form.Label>Current Marital Status</Form.Label>
-              <Form.Control
-                  type='text'
-                  placeholder='Enter Current Marital Status'
-                  value={currentMaritalStatus}
+
+            {/*currentMaritalStatus*/}
+            <Form.Group className='attribute'>
+              <input
+                  type= "radio"
+                  name="currentMaritalStatus"
+                  value="Never Married"
                   onChange={e => setCurrentMaritalStatus(e.target.value)}
-              ></Form.Control>
+              /> Never Married
+
+              <input
+                  type="radio"
+                  name="currentMaritalStatus"
+                  value="Divorced"
+                  onChange={e => setCurrentMaritalStatus(e.target.value)}
+              /> Divorced
             </Form.Group>
 
-            <Form.Group controlId='currentAddressOfCandidate'>
+
+            <Form.Group controlId='currentAddressOfCandidate' className='attribute'>
               <Form.Label>Current Address Of Candidate</Form.Label>
               <Form.Control
                   type='text'
@@ -304,7 +319,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='currentAddressOfFamily'>
+            <Form.Group controlId='currentAddressOfFamily' className='attribute'>
               <Form.Label>Current Address Of Family</Form.Label>
               <Form.Control
                   type='text'
@@ -314,7 +329,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='contactNumber'>
+            <Form.Group controlId='contactNumber' className='attribute'>
               <Form.Label>Contact Number</Form.Label>
               <Form.Control
                   type='text'
@@ -324,7 +339,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='immigrationStatusOfCandidate'>
+            <Form.Group controlId='immigrationStatusOfCandidate' className='attribute'>
               <Form.Label>Immigration Status Of Candidate</Form.Label>
               <Form.Control
                   type='text'
@@ -334,7 +349,39 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='highestEducationOfCandidate'>
+            {/*immigrationStatusOfCandidate*/}
+            <Form.Group className='attribute'>
+              <input
+                  type="radio"
+                  name="immigrationStatusOfCandidate"
+                  value="Student Visa"
+                  onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+              /> Student Visa
+
+              <input
+                  type="radio"
+                  name="immigrationStatusOfCandidate"
+                  value="Work Visa"
+                  onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+              /> Work Visa
+
+              <input
+                  type="radio"
+                  name="immigrationStatusOfCandidate"
+                  value="Permanent Resident"
+                  onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+              /> Permanent Resident
+
+              <input
+                  type="radio"
+                  name="immigrationStatusOfCandidate"
+                  value="Citizen"
+                  onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+              /> Citizen
+            </Form.Group>
+
+
+            <Form.Group controlId='highestEducationOfCandidate' className='attribute'>
               <Form.Label>Highest Education Of Candidate</Form.Label>
               <Form.Control
                   type='text'
@@ -344,7 +391,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='professionalDetailsOfCandidate'>
+            <Form.Group controlId='professionalDetailsOfCandidate' className='attribute'>
               <Form.Label>Professional Details Of Candidate</Form.Label>
               <Form.Control
                   type='text'
@@ -354,7 +401,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='fatherFullName'>
+            <Form.Group controlId='fatherFullName' className='attribute'>
               <Form.Label>Father FullName</Form.Label>
               <Form.Control
                   type='text'
@@ -364,7 +411,7 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='fatherContactNumber'>
+            <Form.Group controlId='fatherContactNumber' className='attribute'>
               <Form.Label>Father Contact Number</Form.Label>
               <Form.Control
                   type='text'
@@ -375,7 +422,7 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-            <Form.Group controlId='motherFullName'>
+            <Form.Group controlId='motherFullName' className='attribute'>
               <Form.Label>Mother Full Name</Form.Label>
               <Form.Control
                   type='text'
@@ -386,7 +433,7 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-            <Form.Group controlId='fatherNativeTown'>
+            <Form.Group controlId='fatherNativeTown' className='attribute'>
               <Form.Label>Father Native Town</Form.Label>
               <Form.Control
                   type='text'
@@ -397,7 +444,7 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-            <Form.Group controlId='motherNativeTown'>
+            <Form.Group controlId='motherNativeTown' className='attribute'>
               <Form.Label>Mother Native Town</Form.Label>
               <Form.Control
                   type='text'
@@ -408,7 +455,7 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-            <Form.Group controlId='detailsOfSiblings'>
+            <Form.Group controlId='detailsOfSiblings' className='attribute'>
               <Form.Label>Details Of Siblings</Form.Label>
               <Form.Control
                   type='text'
@@ -419,7 +466,7 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-            <Form.Group controlId='maternalUncleName'>
+            <Form.Group controlId='maternalUncleName' className='attribute'>
               <Form.Label>Maternal Uncle Name</Form.Label>
               <Form.Control
                   type='text'
@@ -429,33 +476,26 @@ const MatrimonialProfilePage = () => {
               ></Form.Control>
             </Form.Group>
 
-
-
-            <Form.Group controlId='detailsOfMosal'>
-              <Form.Label>Details Of Mosal</Form.Label>
-              <Form.Control
-                  type='text'
-                  placeholder='Enter Details Of Mosal'
-                  value={detailsOfMosal}
-                  onChange={e => setDetailsOfMosal(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-
-
-
-            <Form.Group controlId='believeInKundli'>
-              <Form.Label>Believe In Kundli</Form.Label>
-              <Form.Control
-                  type='text'
-                  placeholder='Enter Believe In Kundli'
-                  value={believeInKundli}
+            {/*believeInKundli*/}
+            <p className='attribute'>Believe in Kundli?</p>
+            <Form.Group className='attribute'>
+              <input
+                  type="radio"
+                  name="believeInKundli"
+                  value="Yes"
                   onChange={e => setBelieveInKundli(e.target.value)}
-              ></Form.Control>
+              /> Yes
+
+              <input
+                  type="radio"
+                  name="believeInKundli"
+                  value="No"
+                  onChange={e => setBelieveInKundli(e.target.value)}
+              /> No
             </Form.Group>
 
 
-
-            <Form.Group controlId='expectationFromLifePartner'>
+            <Form.Group controlId='expectationFromLifePartner' className='attribute'>
               <Form.Label>Expectation From LifePartner</Form.Label>
               <Form.Control
                   as='textarea'
@@ -468,21 +508,28 @@ const MatrimonialProfilePage = () => {
             </Form.Group>
 
 
-
-            <Form.Group controlId='correctInformation'>
-              <Form.Label>Correct Information</Form.Label>
-              <Form.Control
-                  type='text'
-                  placeholder='Enter Correct Information'
-                  value={correctInformation}
+            <Form.Group className='attribute'>
+              <p>I do hereby acknowledge that all the details provided above is correct and I willfully wish to
+                share my details in this portal.</p>
+              <input
+                  type="radio"
+                  name="correctInformation"
+                  value="Yes"
                   onChange={e => setCorrectInformation(e.target.value)}
-              ></Form.Control>
+              /> Yes
+
+              <input
+                  type="radio"
+                  name="correctInformation"
+                  value="Yes"
+                  onChange={e => setCorrectInformation(e.target.value)}
+              /> No
             </Form.Group>
 
             <Button
-              type='submit'
-              variant='primary'
-              style={{ marginTop: '1rem' }}
+                type='submit'
+                variant='primary'
+                style={{marginTop: '1rem'}}
             >
               {isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}
             </Button>

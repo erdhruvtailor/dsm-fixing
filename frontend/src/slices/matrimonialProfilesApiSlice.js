@@ -4,15 +4,8 @@ import { apiSlice } from './apiSlice';
 export const matrimonialProfileApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getMatrimonialProfile: builder.query({
-      query: ({ limit, skip, search }) => ({
-        url: MATRIMONIAL_URL,
-        params: { limit, skip, search }
-      }),
-      providesTags: ['MatrimonialProfile']
-    }),
-    getTopMatrimonialProfile: builder.query({
       query: () => ({
-        url: `${MATRIMONIAL_URL}/top`
+        url: MATRIMONIAL_URL
       }),
       providesTags: ['MatrimonialProfile']
     }),

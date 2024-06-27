@@ -30,8 +30,6 @@ const loginUser = async (req, res, next) => {
       );
     }
 
-    const matrimonialProfileRecord = await MatrimonialProfile.findOne({user:user._id}, '_id');
-
     generateToken(req, res, user._id);
 
     res.status(200).json({
@@ -39,7 +37,6 @@ const loginUser = async (req, res, next) => {
       userId: user._id,
       name: user.name,
       email: user.email,
-      matrimonialProfileId: matrimonialProfileRecord._id,
       isAdmin: user.isAdmin
     });
   } catch (error) {

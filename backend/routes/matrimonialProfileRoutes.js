@@ -3,7 +3,8 @@ import {
   getMatrimonialProfile,
   createMatrimonialProfile,
   updateMatrimonialProfile,
-  deleteMatrimonialProfile
+  deleteMatrimonialProfile,
+  getMatrimonialAllProfile
 } from '../controllers/matrimonialProfileController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 import validateRequest from '../middleware/validator.js';
@@ -33,21 +34,23 @@ const validator = {
     param('id').notEmpty().withMessage('Id is required').isMongoId().withMessage('Invalid Id Format')
   ],
 
+  getMatrimonialAllProfiles: [],
+
   deleteMatrimonialProfile: [
     param('id').notEmpty().withMessage('Id is required').isMongoId().withMessage('Invalid Id Format')
   ],
   updateMatrimonialProfile: [
-    check('name').trim().notEmpty().withMessage('Name is required').escape(),
     param('id').notEmpty().withMessage('Id is required').isMongoId().withMessage('Invalid Id Format')
   ]
 }
 
 router.route('/')
-  .post(validator.createMatrimonialProfile, validateRequest, protect, createMatrimonialProfile);
+  .post(validator.createMatrimonialProfile, validateRequest, protect, createMatrimonialProfile)
+  .get(validator.getMatrimonialAllProfiles, validateRequest, getMatrimonialAllProfile);
 router
   .route('/:id')
   .get(validator.getMatrimonialProfile, validateRequest, getMatrimonialProfile)
-  .put(validator.updateMatrimonialProfile, validateRequest, protect, admin, updateMatrimonialProfile)
-  .delete(validator.deleteMatrimonialProfile, validateRequest, protect, admin, deleteMatrimonialProfile);
+  .put(validator.updateMatrimonialProfile, validateRequest, protect, updateMatrimonialProfile)
+  .delete(validator.deleteMatrimonialProfile, validateRequest, protect, deleteMatrimonialProfile);
 
 export default router;

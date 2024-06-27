@@ -38,12 +38,12 @@ const Header = () => {
     >
       <Container>
         <LinkContainer to='/'>
-          <Navbar.Brand>MERN Shop</Navbar.Brand>
+          <Navbar.Brand>DSP</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='ms-auto m-2'>
-            <SearchBox />
+            {/*<SearchBox />
             <LinkContainer to='/cart'>
               <Nav.Link>
                 <FaShoppingCart style={{ marginRight: '5px' }} />
@@ -61,8 +61,18 @@ const Header = () => {
                   </Badge>
                 )}
               </Nav.Link>
-            </LinkContainer>
+            </LinkContainer>*/}
             {userInfo ? (
+            <LinkContainer to='/matrimonialProfile'>
+              <Nav.Link>
+                <FaUser style={{ marginRight: '5px' }} />
+                Matrimonial Portal
+              </Nav.Link>
+            </LinkContainer>
+                ) : ('')}
+
+            {userInfo ? (
+
               <NavDropdown title={`Hello👋, ${userInfo.name}`} id='username'>
                 <LinkContainer to='/profile'>
                   <NavDropdown.Item>Profile</NavDropdown.Item>

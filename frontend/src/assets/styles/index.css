@@ -52,3 +52,9 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+
+.attribute {
+  margin:15px 0 15px 0;
+  color: gray; /* Text color */
+  border-color: gray; /* Border color */
+}
