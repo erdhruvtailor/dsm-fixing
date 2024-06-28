@@ -66,7 +66,7 @@ const Header = () => {
             <LinkContainer to='/matrimonialProfile'>
               <Nav.Link>
                 <FaUser style={{ marginRight: '5px' }} />
-                Matrimonial Portal
+                Matrimonial Panel
               </Nav.Link>
             </LinkContainer>
                 ) : ('')}
