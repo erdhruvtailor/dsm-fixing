@@ -46,13 +46,13 @@ const MatrimonialProfilePage = () => {
             <Row className='align-items-center'>
                 <Col>
                     <Meta title={'Matrimonial Profile'}/>
-                    <h3>Matrimonial Profile</h3>
+                    <h3>Active Matrimonial Candidates</h3>
                 </Col>
-                {/*<Col className='text-end'>
+                <Col className='text-end'>
                     <LinkContainer to={'/matrimonialProfile/create'}>
-                        <Button className=' my-3' variant='warning'>Add Matrimonial Profile</Button>
+                        <Button className='my-3' variant='default'>Add Matrimonial Profile</Button>
                     </LinkContainer>
-                </Col>*/}
+                </Col>
             </Row>
 
 

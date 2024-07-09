@@ -12,11 +12,11 @@ const Meta = ({ title, description, keywords }) => {
 };
 
 Meta.defaultProps = {
-  title: 'MERN Shop | Buy Electronics Online',
+  title: 'NDCCP | NRIs Darji community common platform',
   description:
-    'Browse and buy the latest electronic gadgets and devices on our online store. Find great deals on smartphones, laptops, and more. Fast shipping and secure payments.',
+    'Common NRIs Darji community platform for Businesses, Connections, Events, Donations and Matrimonial.',
   keywords:
-    'electronics, gadgets, smartphones, laptops, online shopping, tech accessories'
+    'NRIs Darji community, Common Platform, Businesses, Connections, Events, Donations and Matrimonial'
 };
 
 export default Meta;

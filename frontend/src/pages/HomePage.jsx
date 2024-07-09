@@ -51,7 +51,7 @@ const HomePage = () => {
         </Message>
       ) : (
         <>
-          {!search && <ProductCarousel />}
+          {/*{!search && <ProductCarousel />}
           <Meta />
           <h1>Latest Products</h1>
           <Row>
@@ -67,7 +67,7 @@ const HomePage = () => {
               totalPage={totalPage}
               pageHandler={pageHandler}
             />
-          )}
+          )}*/}
         </>
       )}
     </>

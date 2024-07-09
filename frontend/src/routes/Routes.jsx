@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
 import HomePage from '../pages/HomePage';
+import AboutUs from '../pages/AboutUs';
 import MatrimonialProfilePage from '../pages/MatrimonialProfilePage';
 import MatrimonialFormPage from '../pages/MatrimonialFormPage';
 import ProductPage from '../pages/ProductPage';
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         index: true,
         path: '/',
         element: <HomePage />
+      },
+      {
+        path: '/aboutUs',
+        element: <AboutUs/>
       },
       {
         path: '/login',

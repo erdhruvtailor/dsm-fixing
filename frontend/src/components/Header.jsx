@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
-import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import {FaShoppingCart, FaUser, FaUsers} from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
@@ -30,7 +30,7 @@ const Header = () => {
 
   return (
     <Navbar
-      bg='dark'
+      bg='warning'
       variant='dark'
       expand='md'
       collapseOnSelect
@@ -38,30 +38,19 @@ const Header = () => {
     >
       <Container>
         <LinkContainer to='/'>
-          <Navbar.Brand>DSP</Navbar.Brand>
+          <Navbar.Brand><abbr title="NRIs Darji Community Common Platform"><img src="blacklogo.png" alt="" width="20%"/>NDCCP</abbr></Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='ms-auto m-2'>
-            {/*<SearchBox />
-            <LinkContainer to='/cart'>
+
+            <LinkContainer to='/aboutUs'>
               <Nav.Link>
-                <FaShoppingCart style={{ marginRight: '5px' }} />
-                Cart
-                {cartItems.length > 0 && (
-                  <Badge
-                    pill
-                    bg='warning'
-                    style={{ marginLeft: '5px' }}
-                    className='text-dark'
-                  >
-                    <strong>
-                      {cartItems.reduce((acc, item) => acc + item.qty, 0)}
-                    </strong>
-                  </Badge>
-                )}
+                <FaUsers style={{ marginRight: '5px' }} />
+                About Us
               </Nav.Link>
-            </LinkContainer>*/}
+            </LinkContainer>
+
             {userInfo ? (
             <LinkContainer to='/matrimonialProfile'>
               <Nav.Link>
