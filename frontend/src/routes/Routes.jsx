@@ -5,6 +5,7 @@ import HomePage from '../pages/HomePage';
 import AboutUs from '../pages/AboutUs';
 import MatrimonialProfilePage from '../pages/MatrimonialProfilePage';
 import MatrimonialFormPage from '../pages/MatrimonialFormPage';
+import MatrimonialListPage from '../pages/admin/MatrimonialListPage';
 import ProductPage from '../pages/ProductPage';
 import CartPage from '../pages/CartPage';
 import LoginPage from '../pages/LoginPage';
@@ -141,6 +142,10 @@ const router = createBrowserRouter([
           {
             path: '/admin/dashboard',
             element: <Dashboard />
+          },
+          {
+            path: '/admin/matrimonial-list',
+            element: <MatrimonialListPage />
           },
           {
             path: '/admin/order-list',
