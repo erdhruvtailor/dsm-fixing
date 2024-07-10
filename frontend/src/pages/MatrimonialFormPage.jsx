@@ -13,7 +13,9 @@ import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
+import {predCurrentMaritalStatus, predGender, predImmigrationStatusOfCandidate, predbelieveInKundli} from '../utils/preDefinedAttributes';
 
+console.log(predCurrentMaritalStatus);
 const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
@@ -48,7 +50,6 @@ const MatrimonialProfilePage = () => {
     const [correctInformation, setCorrectInformation] = useState('');
 
     const getMatrimonialProfileQueryResult = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
-
     const {
         data: matrimonialProfile,
         isLoading,
@@ -216,20 +217,22 @@ const MatrimonialProfilePage = () => {
                                 </Form.Group>
 
                                 {/*gender*/}
+                                {console.log(gender)}
                                 <Form.Group className='attribute'>
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="male"
-                                        onChange={e => setGender(e.target.value)}
-                                    /> Male
-
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="Female"
-                                        onChange={e => setGender(e.target.value)}
-                                    /> Female
+                                    <Row>
+                                        {Object.entries(predGender).map(([key, value]) => (
+                                            <Col md={2} key={value}>
+                                              <input
+                                                type="radio"
+                                                name="gender"
+                                                value={key}
+                                                checked={gender == key}
+                                                onChange={e => setGender(e.target.value)}
+                                              />
+                                              <label>{value}</label>
+                                            </Col>
+                                        ))}
+                                    </Row>
                                 </Form.Group>
 
                                 <Form.Group controlId='birthDate' className='attribute'>
@@ -294,19 +297,20 @@ const MatrimonialProfilePage = () => {
 
                                 {/*currentMaritalStatus*/}
                                 <Form.Group className='attribute'>
-                                    <input
-                                        type="radio"
-                                        name="currentMaritalStatus"
-                                        value="Never Married"
-                                        onChange={e => setCurrentMaritalStatus(e.target.value)}
-                                    /> Never Married
-
-                                    <input
-                                        type="radio"
-                                        name="currentMaritalStatus"
-                                        value="Divorced"
-                                        onChange={e => setCurrentMaritalStatus(e.target.value)}
-                                    /> Divorced
+                                    <Row>
+                                        {Object.entries(predCurrentMaritalStatus).map(([key, value]) => (
+                                            <Col md={3} key={value}>
+                                              <input
+                                                type="radio"
+                                                name="currentMaritalStatus"
+                                                value={key}
+                                                checked={currentMaritalStatus == key}
+                                                onChange={e => setCurrentMaritalStatus(e.target.value)}
+                                              />
+                                              <label>{value}</label>
+                                            </Col>
+                                        ))}
+                                    </Row>
                                 </Form.Group>
 
 
@@ -346,43 +350,25 @@ const MatrimonialProfilePage = () => {
 
                                 <Form.Group controlId='immigrationStatusOfCandidate' className='attribute'>
                                     <Form.Label>Immigration Status Of Candidate</Form.Label>
-                                    {/*<Form.Control
-                  type='text'
-                  placeholder='Enter Immigration Status Of Candidate'
-                  value={immigrationStatusOfCandidate}
-                  onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-              ></Form.Control>*/}
                                 </Form.Group>
 
                                 {/*immigrationStatusOfCandidate*/}
                                 <Form.Group className='attribute'>
-                                    <input
-                                        type="radio"
-                                        name="immigrationStatusOfCandidate"
-                                        value="Student Visa"
-                                        onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                    /> Student Visa
-
-                                    <input
-                                        type="radio"
-                                        name="immigrationStatusOfCandidate"
-                                        value="Work Visa"
-                                        onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                    /> Work Visa
-
-                                    <input
-                                        type="radio"
-                                        name="immigrationStatusOfCandidate"
-                                        value="Permanent Resident"
-                                        onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                    /> Permanent Resident
-
-                                    <input
-                                        type="radio"
-                                        name="immigrationStatusOfCandidate"
-                                        value="Citizen"
-                                        onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                    /> Citizen
+                                    <Row>
+                                        {Object.entries(predImmigrationStatusOfCandidate).map(([key, value]) => (
+                                            <Col md={6} key={value}>
+                                              <input
+                                                type="radio"
+                                                name="immigrationStatusOfCandidate"
+                                                value={key}
+                                                checked={immigrationStatusOfCandidate === key}
+                                                onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+                                                class="mb-3"
+                                              />
+                                              <label>{value}</label>
+                                            </Col>
+                                        ))}
+                                    </Row>
                                 </Form.Group>
 
 
@@ -470,6 +456,16 @@ const MatrimonialProfilePage = () => {
                                     ></Form.Control>
                                 </Form.Group>
 
+                                <Form.Group controlId='detailsOfMosal' className='attribute'>
+                                    <Form.Label>Details Of Mosal</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Details Of Mosal'
+                                        value={detailsOfMosal}
+                                        onChange={e => setDetailsOfMosal(e.target.value)}
+                                    ></Form.Control>
+                                </Form.Group>
+
 
                                 <Form.Group controlId='maternalUncleName' className='attribute'>
                                     <Form.Label>Maternal Uncle Name</Form.Label>
@@ -484,19 +480,20 @@ const MatrimonialProfilePage = () => {
                                 {/*believeInKundli*/}
                                 <p className='attribute'>Believe in Kundli?</p>
                                 <Form.Group className='attribute'>
-                                    <input
-                                        type="radio"
-                                        name="believeInKundli"
-                                        value="Yes"
-                                        onChange={e => setBelieveInKundli(e.target.value)}
-                                    /> Yes
-
-                                    <input
-                                        type="radio"
-                                        name="believeInKundli"
-                                        value="No"
-                                        onChange={e => setBelieveInKundli(e.target.value)}
-                                    /> No
+                                    <Row>
+                                        {Object.entries(predbelieveInKundli).map(([key, value]) => (
+                                            <Col md={2} mb={2} key={value}>
+                                              <input
+                                                type="radio"
+                                                name="believeInKundli"
+                                                value={key}
+                                                checked={believeInKundli == key}
+                                                onChange={e => setBelieveInKundli(e.target.value)}
+                                              />
+                                              <label>{value}</label>
+                                            </Col>
+                                        ))}
+                                    </Row>
                                 </Form.Group>
 
 
@@ -512,26 +509,24 @@ const MatrimonialProfilePage = () => {
                                     ></Form.Control>
                                 </Form.Group>
 
+                                {!isUpdateMode ? 
+                                    <Form.Group className='attribute'>
+                                        <p>I do hereby acknowledge that all the details provided above is correct and I willfully wish to share my details in this portal.</p>
+                                        <input
+                                            type="radio"
+                                            name="correctInformation"
+                                            value="Yes"
+                                            onChange={e => setCorrectInformation(e.target.value)}
+                                        /> Yes
 
-                                <Form.Group className='attribute'>
-                                    <p>I do hereby acknowledge that all the details provided above is correct and I
-                                        willfully wish to
-                                        share my details in this portal.</p>
-                                    <input
-                                        type="radio"
-                                        name="correctInformation"
-                                        value="Yes"
-                                        onChange={e => setCorrectInformation(e.target.value)}
-                                    /> Yes
-
-                                    <input
-                                        type="radio"
-                                        name="correctInformation"
-                                        value="Yes"
-                                        onChange={e => setCorrectInformation(e.target.value)}
-                                    /> No
-                                </Form.Group>
-
+                                        <input
+                                            type="radio"
+                                            name="correctInformation"
+                                            value="Yes"
+                                            onChange={e => setCorrectInformation(e.target.value)}
+                                        /> No
+                                    </Form.Group>
+                                : ''}
                             </Col>
                         </Row>
 

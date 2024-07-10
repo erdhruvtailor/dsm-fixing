@@ -39,18 +39,17 @@ const MatrimonialProfilePage = () => {
         isLoading2,
         error2
     } = useGetMatrimonialProfileQuery();
-
     return (
         <>
 
             <Row className='align-items-center'>
                 <Col>
                     <Meta title={'Matrimonial Profile'}/>
-                    <h3>Active Matrimonial Candidates</h3>
+                    <h3>Matrimonial Candidate Detail</h3>
                 </Col>
                 <Col className='text-end'>
-                    <LinkContainer to={'/matrimonialProfile/create'}>
-                        <Button className='my-3' variant='default'>Add Matrimonial Profile</Button>
+                    <LinkContainer to={'/matrimonialProfile/update/'+matrimonialProfileId}>
+                        <Button className='my-3' variant='default'>Update Matrimonial Profile</Button>
                     </LinkContainer>
                 </Col>
             </Row>
@@ -59,7 +58,6 @@ const MatrimonialProfilePage = () => {
             {isLoading ? (
                 <Loader/>
             ) : matrimonialProfileId ? "" : (
-
                 <Row>
                     {matrimonialProfileAllEntries?.map(matrimonialProfileAllEntry => (
                         <Col key={matrimonialProfileAllEntry._id} sm={12} md={6} lg={4} xl={3}>
