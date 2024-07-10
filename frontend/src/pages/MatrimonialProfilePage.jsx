@@ -23,10 +23,16 @@ import Message from "../components/Message";
 import {FaEdit, FaRegEye, FaStreetView, FaTrash} from "react-icons/fa";
 import Rating from "../components/Rating";
 import {addCurrency} from "../utils/addCurrency";
+import Paginate from "../components/Paginate";
 
 const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const {userInfo} = useSelector(state => state.auth);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [limit, setLimit] = useState(0);
+    const [skip, setSkip] = useState(0);
 
     const {
         data: matrimonialProfile,
@@ -34,11 +40,36 @@ const MatrimonialProfilePage = () => {
         error
     } = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
 
-    const {
-        data: matrimonialProfileAllEntries,
-        isLoading2,
-        error2
-    } = useGetMatrimonialProfileQuery();
+
+    // const {
+    //     data: matrimonialProfiles,
+    //     isLoading2,
+    //     error2
+    // } = useGetMatrimonialProfileQuery({
+    //     limit,
+    //     skip
+    // });
+
+    const { data, isLoading2, error2 } = useGetMatrimonialProfileQuery({
+        limit,
+        skip
+    });
+
+    useEffect(() => {
+        if (data) {
+            setLimit(8);
+            setSkip((currentPage - 1) * limit);
+            setTotal(data.total);
+            setTotalPage(Math.ceil(total / limit));
+        }
+    }, [currentPage, data, limit, total]);
+
+    const pageHandler = pageNum => {
+        if (pageNum >= 1 && pageNum <= totalPage && pageNum !== currentPage) {
+            setCurrentPage(pageNum);
+        }
+    };
+
     return (
         <>
 
@@ -48,43 +79,54 @@ const MatrimonialProfilePage = () => {
                     <h3>Matrimonial Candidate Detail</h3>
                 </Col>
                 <Col className='text-end'>
-                    <LinkContainer to={'/matrimonialProfile/update/'+matrimonialProfileId}>
-                        <Button className='my-3' variant='default'>Update Matrimonial Profile</Button>
+                    {/*<LinkContainer to={'/matrimonialProfile/update/'+matrimonialProfileId}>*/}
+                    <LinkContainer to={'/matrimonialProfile/create/'}>
+                        <Button className='my-3' variant='default'>Make Matrimonial Profile</Button>
                     </LinkContainer>
                 </Col>
             </Row>
+
+
 
 
             {isLoading ? (
                 <Loader/>
             ) : matrimonialProfileId ? "" : (
                 <Row>
-                    {matrimonialProfileAllEntries?.map(matrimonialProfileAllEntry => (
-                        <Col key={matrimonialProfileAllEntry._id} sm={12} md={6} lg={4} xl={3}>
+                    {data.matrimonialProfiles.map(matrimonialProfile => (
+                        <Col key={matrimonialProfile._id} sm={12} md={6} lg={4} xl={3}>
                             <Card className='my-3 p-3 rounded text-center'>
                                 <Link
-                                    to={`/matrimonialProfile/${matrimonialProfileAllEntry._id}`}
+                                    to={`/matrimonialProfile/${matrimonialProfile._id}`}
                                     style={{textDecoration: 'none'}}
                                     className='text-dark'
                                 >
                                     <Card.Img
                                         variant='top'
-                                        src={matrimonialProfileAllEntry.image}
+                                        src={matrimonialProfile.image}
                                         style={{height: '200px', objectFit: 'contain'}}
                                     />
                                     <Card.Body>
                                         <Card.Title as='div' className='product-title'>
-                                            <h2><strong>{matrimonialProfileAllEntry.fullName}</strong></h2>
+                                            <h2><strong>{matrimonialProfile.fullName}</strong></h2>
                                         </Card.Title>
 
                                         <Card.Text
-                                            as='p'>{matrimonialProfileAllEntry.currentAddressOfCandidate}</Card.Text>
+                                            as='p'>{matrimonialProfile.currentAddressOfCandidate}</Card.Text>
                                     </Card.Body>
                                 </Link>
                             </Card>
                         </Col>
                     ))}
                 </Row>
+            )}
+
+            {totalPage > 1 && (
+                <Paginate
+                    currentPage={currentPage}
+                    totalPage={totalPage}
+                    pageHandler={pageHandler}
+                />
             )}
 
 

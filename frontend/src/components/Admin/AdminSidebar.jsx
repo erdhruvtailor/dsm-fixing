@@ -45,28 +45,7 @@ const Sidebar = () => {
           </strong>
         </Nav.Link>
       </LinkContainer>
-      <LinkContainer to='/admin/product-list' className='mb-2'>
-        <Nav.Link>
-          <strong>
-            <FaTable
-              style={{ marginRight: '10px', marginBottom: '3px' }}
-              size={16}
-            />
-            Products
-          </strong>
-        </Nav.Link>
-      </LinkContainer>
-      <LinkContainer to='/admin/order-list' className='mb-2'>
-        <Nav.Link>
-          <strong>
-            <FaCartShopping
-              style={{ marginRight: '10px', marginBottom: '3px' }}
-              size={16}
-            />
-            Orders
-          </strong>
-        </Nav.Link>
-      </LinkContainer>
+
       <LinkContainer to='/admin/user-list' className='mb-2'>
         <Nav.Link>
           <strong>
@@ -78,6 +57,50 @@ const Sidebar = () => {
           </strong>
         </Nav.Link>
       </LinkContainer>
+      <LinkContainer to='/admin/matrimonial-list' className='mb-2'>
+        <Nav.Link>
+          <strong>
+            <FaTable
+                style={{ marginRight: '10px', marginBottom: '3px' }}
+                size={16}
+            />
+            Matrimonial
+          </strong>
+        </Nav.Link>
+      </LinkContainer>
+      <LinkContainer to='/admin/order-list' className='mb-2'>
+        <Nav.Link>
+          <strong>
+            <FaCartShopping
+                style={{ marginRight: '10px', marginBottom: '3px' }}
+                size={16}
+            />
+            Business
+          </strong>
+        </Nav.Link>
+      </LinkContainer>
+      {/*<LinkContainer to='/admin/product-list' className='mb-2'>
+        <Nav.Link>
+          <strong>
+            <FaTable
+                style={{ marginRight: '10px', marginBottom: '3px' }}
+                size={16}
+            />
+            Products
+          </strong>
+        </Nav.Link>
+      </LinkContainer>
+      <LinkContainer to='/admin/order-list' className='mb-2'>
+        <Nav.Link>
+          <strong>
+            <FaCartShopping
+                style={{ marginRight: '10px', marginBottom: '3px' }}
+                size={16}
+            />
+            Orders
+          </strong>
+        </Nav.Link>
+      </LinkContainer>*/}
       <LinkContainer to='/admin/admin-list' className='mb-2'>
         <Nav.Link>
           <strong>

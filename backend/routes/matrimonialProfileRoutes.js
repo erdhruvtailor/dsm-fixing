@@ -4,7 +4,8 @@ import {
   createMatrimonialProfile,
   updateMatrimonialProfile,
   deleteMatrimonialProfile,
-  getMatrimonialAllProfile
+  getMatrimonialAllProfile,
+  getMatrimonialAllProfiles
 } from '../controllers/matrimonialProfileController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 import validateRequest from '../middleware/validator.js';
@@ -34,7 +35,17 @@ const validator = {
     param('id').notEmpty().withMessage('Id is required').isMongoId().withMessage('Invalid Id Format')
   ],
 
-  getMatrimonialAllProfiles: [],
+  getMatrimonialAllProfiles: [
+    check('limit').optional().isNumeric().withMessage('Limit parameter must be a number').custom(value => {
+      if(value < 0) throw new Error('Value should not be less than Zero');
+      return true;
+    }),
+    check('skip').optional().isNumeric().withMessage('skip parameter must be a number').custom(value => {
+      if(value < 0) throw new Error('Value should not be less than Zero');
+      return true;
+    }),
+    check('search').optional().trim().escape()
+  ],
 
   deleteMatrimonialProfile: [
     param('id').notEmpty().withMessage('Id is required').isMongoId().withMessage('Invalid Id Format')
@@ -46,7 +57,7 @@ const validator = {
 
 router.route('/')
   .post(validator.createMatrimonialProfile, validateRequest, protect, createMatrimonialProfile)
-  .get(validator.getMatrimonialAllProfiles, validateRequest, getMatrimonialAllProfile);
+  .get(validator.getMatrimonialAllProfiles, validateRequest, getMatrimonialAllProfiles);
 router
   .route('/:id')
   .get(validator.getMatrimonialProfile, validateRequest, getMatrimonialProfile)

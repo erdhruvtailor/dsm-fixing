@@ -15,7 +15,6 @@ import Message from '../components/Message';
 import Meta from '../components/Meta';
 import {predCurrentMaritalStatus, predGender, predImmigrationStatusOfCandidate, predbelieveInKundli} from '../utils/preDefinedAttributes';
 
-console.log(predCurrentMaritalStatus);
 const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
@@ -32,6 +31,7 @@ const MatrimonialProfilePage = () => {
     const [interests, setInterests] = useState('');
     const [currentMaritalStatus, setCurrentMaritalStatus] = useState('');
     const [currentAddressOfCandidate, setCurrentAddressOfCandidate] = useState('');
+    const [currentCountryOfCandidate, setCurrentCountryOfCandidate] = useState('');
     const [currentAddressOfFamily, setCurrentAddressOfFamily] = useState('');
     const [contactNumber, setContactNumber] = useState('');
     const [immigrationStatusOfCandidate, setImmigrationStatusOfCandidate] = useState('');
@@ -82,6 +82,7 @@ const MatrimonialProfilePage = () => {
             setInterests(matrimonialProfile.interests);
             setCurrentMaritalStatus(matrimonialProfile.currentMaritalStatus);
             setCurrentAddressOfCandidate(matrimonialProfile.currentAddressOfCandidate);
+            setCurrentCountryOfCandidate(matrimonialProfile.currentCountryOfCandidate);
             setCurrentAddressOfFamily(matrimonialProfile.currentAddressOfFamily);
             setContactNumber(matrimonialProfile.contactNumber);
             setImmigrationStatusOfCandidate(matrimonialProfile.immigrationStatusOfCandidate);
@@ -129,6 +130,7 @@ const MatrimonialProfilePage = () => {
                 interests,
                 currentMaritalStatus,
                 currentAddressOfCandidate,
+                currentCountryOfCandidate,
                 currentAddressOfFamily,
                 contactNumber,
                 immigrationStatusOfCandidate,
@@ -217,7 +219,6 @@ const MatrimonialProfilePage = () => {
                                 </Form.Group>
 
                                 {/*gender*/}
-                                {console.log(gender)}
                                 <Form.Group className='attribute'>
                                     <Row>
                                         {Object.entries(predGender).map(([key, value]) => (
@@ -321,6 +322,17 @@ const MatrimonialProfilePage = () => {
                                         placeholder='Enter Current Address Of Candidate'
                                         value={currentAddressOfCandidate}
                                         onChange={e => setCurrentAddressOfCandidate(e.target.value)}
+                                    ></Form.Control>
+                                </Form.Group>
+
+
+                                <Form.Group controlId='currentCountryOfCandidate' className='attribute'>
+                                    <Form.Label>Current Country Of Candidate</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Current Country Of Candidate'
+                                        value={currentCountryOfCandidate}
+                                        onChange={e => setCurrentCountryOfCandidate(e.target.value)}
                                     ></Form.Control>
                                 </Form.Group>
 

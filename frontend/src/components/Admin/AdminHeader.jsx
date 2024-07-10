@@ -9,7 +9,7 @@ const AdminHeader = () => {
 
   return (
     <Navbar
-      bg='dark'
+      bg='danger'
       variant='dark'
       expand='md'
       collapseOnSelect
@@ -17,7 +17,7 @@ const AdminHeader = () => {
     >
       <Container fluid>
         <LinkContainer to='/admin/dashboard'>
-          <Navbar.Brand>MERN Shop Admin</Navbar.Brand>
+          <Navbar.Brand>NDCCP Admin</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>

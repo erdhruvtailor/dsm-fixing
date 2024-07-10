@@ -27,14 +27,14 @@ const AdminDashboard = () => {
             <Navbar
               className='align-items-start position-fixed d-none d-md-block'
               variant='dark'
-              bg='dark'
+              bg='danger'
               style={{
                 height: '100vh',
                 marginTop: '80px',
                 borderRadius: '8px'
               }}
             >
-              <Nav className='d-flex flex-column px-5'>
+              <Nav className='d-flex flex-column px-4'>
                 <AdminSidebar />
               </Nav>
             </Navbar>

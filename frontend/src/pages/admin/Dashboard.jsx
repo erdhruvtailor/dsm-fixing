@@ -27,25 +27,37 @@ const Dashboard = () => {
         <>
           <Row>
             <Meta title={'Admin Dashboard'} />
+
             <Col md={6} lg={3} className='position-relative'>
+              <DashboardCard
+                  title={'Users'}
+                  icon={<FaUsers size={40} />}
+                  value={users?.length}
+                  bgColor={'bg-info'}
+              />
+            </Col>
+
+            <Col md={6} lg={3} className='position-relative'>
+              <DashboardCard
+                  title={'Matrimonial'}
+                  icon={<FaUsers size={40} />}
+                  value={users?.length}
+                  bgColor={'bg-danger'}
+              />
+            </Col>
+
+            {/*<Col md={6} lg={3} className='position-relative'>
               <DashboardCard
                 title={'Products'}
                 icon={<FaStore size={40} />}
                 value={data?.total}
                 bgColor={'bg-info'}
               />
-            </Col>
+            </Col>*/}
+
             <Col md={6} lg={3} className='position-relative'>
               <DashboardCard
-                title={'Users'}
-                icon={<FaUsers size={40} />}
-                value={users?.length}
-                bgColor={'bg-danger'}
-              />
-            </Col>
-            <Col md={6} lg={3} className='position-relative'>
-              <DashboardCard
-                title={'Orders'}
+                title={'Business'}
                 icon={<FaShoppingBag size={40} />}
                 value={orders?.length}
                 bgColor={'bg-warning'}
@@ -53,7 +65,7 @@ const Dashboard = () => {
             </Col>
             <Col md={6} lg={3} className='position-relative'>
               <DashboardCard
-                title={'Revenue'}
+                title={'Donation'}
                 icon={<FaWallet size={40} />}
                 value={addCurrency(
                   orders?.reduce((acc, item) => acc + item.totalPrice, 0)

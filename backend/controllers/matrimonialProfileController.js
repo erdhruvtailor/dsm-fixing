@@ -3,6 +3,41 @@ import { deleteFile } from '../utils/file.js';
 import User from "../models/userModel.js";
 
 
+// @desc     Fetch All Products
+// @method   GET
+// @endpoint /api/v1/matrimonialProfile?limit=2&skip=0
+// @access   Public
+const getMatrimonialAllProfiles = async (req, res, next) => {
+  try {
+    const total = await MatrimonialProfile.countDocuments();
+    const maxLimit = process.env.PAGINATION_MAX_LIMIT;
+    const maxSkip = total === 0 ? 0 : total - 1;
+    const limit = Number(req.query.limit) || maxLimit;
+    const skip = Number(req.query.skip) || 0;
+    const search = req.query.search || '';
+
+    const matrimonialProfiles = await MatrimonialProfile.find({
+      fullName: { $regex: search, $options: 'i' }
+    })
+        .limit(limit > maxLimit ? maxLimit : limit)
+        .skip(skip > maxSkip ? maxSkip : skip < 0 ? 0 : skip);
+
+    if (!matrimonialProfiles || matrimonialProfiles.length === 0) {
+      res.statusCode = 404;
+      throw new Error('Matrimonial profiles not found!');
+    }
+
+    res.status(200).json({
+      matrimonialProfiles,
+      total,
+      maxLimit,
+      maxSkip
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc     Fetch all MatrimonialProfile
 // @method   GET
 ``// @endpoint /api/v1/MatrimonialProfile/
@@ -53,7 +88,7 @@ const getMatrimonialProfile = async (req, res, next) => {
 // @access   Private/Admin
 const createMatrimonialProfile = async (req, res, next) => {
   try {
-    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, correctInformation } =
+    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, correctInformation } =
       req.body;
     console.log(req.file);
     const matrimonialProfile = new MatrimonialProfile({
@@ -70,6 +105,7 @@ const createMatrimonialProfile = async (req, res, next) => {
       interests,
       currentMaritalStatus,
       currentAddressOfCandidate,
+      currentCountryOfCandidate,
       currentAddressOfFamily,
       contactNumber,
       immigrationStatusOfCandidate,
@@ -114,6 +150,7 @@ const updateMatrimonialProfile = async (req, res, next) => {
       interests,
       currentMaritalStatus,
       currentAddressOfCandidate,
+      currentCountryOfCandidate,
       currentAddressOfFamily,
       contactNumber,
       immigrationStatusOfCandidate,
@@ -154,6 +191,7 @@ const updateMatrimonialProfile = async (req, res, next) => {
     matrimonialProfile.interests = interests || matrimonialProfile.interests;
     matrimonialProfile.currentMaritalStatus = currentMaritalStatus || matrimonialProfile.currentMaritalStatus;
     matrimonialProfile.currentAddressOfCandidate = currentAddressOfCandidate || matrimonialProfile.currentAddressOfCandidate;
+    matrimonialProfile.currentCountryOfCandidate = currentCountryOfCandidate || matrimonialProfile.currentCountryOfCandidate;
     matrimonialProfile.currentAddressOfFamily = currentAddressOfFamily || matrimonialProfile.currentAddressOfFamily;
     matrimonialProfile.contactNumber = contactNumber || matrimonialProfile.contactNumber;
     matrimonialProfile.immigrationStatusOfCandidate = immigrationStatusOfCandidate || matrimonialProfile.immigrationStatusOfCandidate;
@@ -208,6 +246,7 @@ const deleteMatrimonialProfile = async (req, res, next) => {
 
 
 export {
+  getMatrimonialAllProfiles,
   getMatrimonialProfile,
   createMatrimonialProfile,
   updateMatrimonialProfile,
