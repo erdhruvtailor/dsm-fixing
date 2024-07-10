@@ -15,7 +15,6 @@ import Message from '../components/Message';
 import Meta from '../components/Meta';
 import {predCurrentMaritalStatus, predGender, predImmigrationStatusOfCandidate, predbelieveInKundli} from '../utils/preDefinedAttributes';
 
-console.log(predCurrentMaritalStatus);
 const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
@@ -166,7 +165,9 @@ const MatrimonialProfilePage = () => {
     return (
         <>
             <Meta title={'Matrimonial Profile Form'}/>
-            <Link to='/matrimonialProfile' className='btn btn-light my-3'>
+            <Link 
+                to={!isUpdateMode ? '/matrimonialProfile' : '/matrimonialProfile/'+matrimonialProfileId}
+                className='btn btn-light my-3'>
                 Go Back
             </Link>
             {(isUpdateMatrimonialProfileLoading ||
@@ -217,7 +218,6 @@ const MatrimonialProfilePage = () => {
                                 </Form.Group>
 
                                 {/*gender*/}
-                                {console.log(gender)}
                                 <Form.Group className='attribute'>
                                     <Row>
                                         {Object.entries(predGender).map(([key, value]) => (
