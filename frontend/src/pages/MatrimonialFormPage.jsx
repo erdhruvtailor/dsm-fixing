@@ -170,7 +170,9 @@ const MatrimonialProfilePage = () => {
     return (
         <>
             <Meta title={'Matrimonial Profile Form'}/>
-            <Link to='/matrimonialProfile' className='btn btn-light my-3'>
+            <Link 
+                to={!isUpdateMode ? '/matrimonialProfile' : '/matrimonialProfile/'+matrimonialProfileId}
+                className='btn btn-light my-3'>
                 Go Back
             </Link>
             {(isUpdateMatrimonialProfileLoading ||
