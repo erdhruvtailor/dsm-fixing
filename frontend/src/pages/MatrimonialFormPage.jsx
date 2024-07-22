@@ -157,10 +157,12 @@ const MatrimonialProfilePage = () => {
             } else {
                 const {data} = await createMatrimonialProfile(matrimonialProfileData);
                 toast.success(data.message);
+                console.log("1");
             }
             navigate('/matrimonialProfile');
         } catch (errors) {
             toast.error(errors?.data?.message || errors.errors);
+            console.log("2");
         }
     };
 

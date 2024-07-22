@@ -34,26 +34,16 @@ const MatrimonialProfilePage = () => {
     const [limit, setLimit] = useState(0);
     const [skip, setSkip] = useState(0);
 
+    const {data, isLoading2, error2} = useGetMatrimonialProfileQuery({
+        limit,
+        skip
+    });
+
     const {
         data: matrimonialProfile,
         isLoading,
         error
     } = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
-
-
-    // const {
-    //     data: matrimonialProfiles,
-    //     isLoading2,
-    //     error2
-    // } = useGetMatrimonialProfileQuery({
-    //     limit,
-    //     skip
-    // });
-
-    const { data, isLoading2, error2 } = useGetMatrimonialProfileQuery({
-        limit,
-        skip
-    });
 
     useEffect(() => {
         if (data) {
@@ -85,8 +75,6 @@ const MatrimonialProfilePage = () => {
                     </LinkContainer>
                 </Col>
             </Row>
-
-
 
 
             {isLoading ? (
@@ -130,41 +118,6 @@ const MatrimonialProfilePage = () => {
             )}
 
 
-            {/*<Table striped hover bordered responsive size='sm'>
-                <thead>
-                <tr>
-                    <th>NAME</th>
-                    <th>EMAIL</th>
-                    <th>ACTIONS</th>
-                </tr>
-                </thead>
-                <tbody>
-                {matrimonialProfileAllEntries?.map(matrimonialProfileAllEntry => (
-                    <tr key={matrimonialProfileAllEntry._id}>
-                        <td>{matrimonialProfileAllEntry.fullName}</td>
-                        <td>{matrimonialProfileAllEntry.email}</td>
-                        <td>
-                            <LinkContainer to={`/matrimonialProfile/${matrimonialProfileAllEntry._id}`}>
-                                <Button className='btn-sm' variant='light'>
-                                    <FaRegEye style={{color: 'blue'}}/>
-                                </Button>
-                            </LinkContainer>
-                            <LinkContainer to={`/matrimonialProfile/update/${matrimonialProfileAllEntry._id}`}>
-                                <Button className='btn-sm' variant='light'>
-                                    <FaEdit style={{color: 'grey'}}/>
-                                </Button>
-                            </LinkContainer>
-                            <Button className='btn-sm' variant='light' onClick={() => {
-                            }}>
-                                <FaTrash style={{color: 'red'}}/>
-                            </Button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>*/}
-
-
             {isLoading ? (
                 <Loader/>
             ) : error ? "" : (
@@ -204,8 +157,6 @@ const MatrimonialProfilePage = () => {
                                     <p>Height : {matrimonialProfile.height}
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Weight
                                         : {matrimonialProfile.weight}</p>
-
-
                                 </ListGroup.Item>
                             </Col>
                         </Col>
@@ -217,61 +168,53 @@ const MatrimonialProfilePage = () => {
                         </Col>
                         <Col md={5}>
                             <ListGroup>
-                            <ListGroup.Item>
-
-                                <b className="label1">Current Information:</b><br/><br/>
-
-                                <p>Marital Status : {matrimonialProfile.currentMaritalStatus}</p>
-                                <p>Address Of Candidate
-                                    : {matrimonialProfile.currentAddressOfCandidate}</p>
-                                <p>Address Of Family : {matrimonialProfile.currentAddressOfFamily}</p>
-                                <p>Contact Number : {matrimonialProfile.contactNumber}</p>
-                                <p>Immigration Status
-                                    : {matrimonialProfile.immigrationStatusOfCandidate}</p>
-
-                            </ListGroup.Item>
                                 <ListGroup.Item>
 
-                                    <b className="label1">Family Information:</b><br/><br/>
-                                <p>Father FullName : {matrimonialProfile.fatherFullName}</p>
-                                <p>Father Contact Number : {matrimonialProfile.fatherContactNumber}</p>
-                                <p>Mother FullName : {matrimonialProfile.motherFullName}</p>
-                                <p>Father NativeTown : {matrimonialProfile.fatherNativeTown}
-                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother
-                                    NativeTown : {matrimonialProfile.motherNativeTown}</p>
-                                <p>Details Of Siblings : {matrimonialProfile.detailsOfSiblings}</p>
-                                <p>Maternal UncleName : {matrimonialProfile.maternalUncleName}</p>
-                                <p>Details Of Mosal : {matrimonialProfile.detailsOfMosal}</p>
+                                    <b className="label1">Current Information:</b><br/><br/>
 
-                            </ListGroup.Item>
+                                    <p>Marital Status : {matrimonialProfile.currentMaritalStatus}</p>
+                                    <p>Address Of Candidate
+                                        : {matrimonialProfile.currentAddressOfCandidate}</p>
+                                    <p>Address Of Family : {matrimonialProfile.currentAddressOfFamily}</p>
+                                    <p>Contact Number : {matrimonialProfile.contactNumber}</p>
+                                    <p>Immigration Status
+                                        : {matrimonialProfile.immigrationStatusOfCandidate}</p>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <b className="label1">Family Information:</b><br/><br/>
+                                    <p>Father FullName : {matrimonialProfile.fatherFullName}</p>
+                                    <p>Father Contact Number : {matrimonialProfile.fatherContactNumber}</p>
+                                    <p>Mother FullName : {matrimonialProfile.motherFullName}</p>
+                                    <p>Father NativeTown : {matrimonialProfile.fatherNativeTown}
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother
+                                        NativeTown : {matrimonialProfile.motherNativeTown}</p>
+                                    <p>Details Of Siblings : {matrimonialProfile.detailsOfSiblings}</p>
+                                    <p>Maternal UncleName : {matrimonialProfile.maternalUncleName}</p>
+                                    <p>Details Of Mosal : {matrimonialProfile.detailsOfMosal}</p>
+                                </ListGroup.Item>
 
                                 <ListGroup.Item>
                                     <p>Interests : {matrimonialProfile.interests}</p>
                                     <p>Believe In Kundli : {matrimonialProfile.believeInKundli}</p>
                                     <p>Expectation From LifePartner
                                         : {matrimonialProfile.expectationFromLifePartner}</p>
-
                                 </ListGroup.Item>
-
                             </ListGroup>
-
                         </Col>
+
                         <Col md={3}>
                             <ListGroup>
-                            <ListGroup.Item>
-                                <b className="label1">Education:</b><br/><br/>
+                                <ListGroup.Item>
+                                    <b className="label1">Education:</b><br/><br/>
+                                    <p>{matrimonialProfile.highestEducationOfCandidate}</p>
+                                </ListGroup.Item>
 
-                                <p>{matrimonialProfile.highestEducationOfCandidate}</p>
-
-                            </ListGroup.Item>
-
-                            <ListGroup.Item>
-                                <b className="label1">Profession/Occupation:</b><br/><br/>
-
-                                <p>{matrimonialProfile.professionalDetailsOfCandidate}</p>
-
-                            </ListGroup.Item>
-                           </ListGroup>
+                                <ListGroup.Item>
+                                    <b className="label1">Profession/Occupation:</b><br/><br/>
+                                    <p>{matrimonialProfile.professionalDetailsOfCandidate}</p>
+                                </ListGroup.Item>
+                            </ListGroup>
                         </Col>
 
                     </Row>
