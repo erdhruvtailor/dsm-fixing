@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {Button, Form, Row, Col, Image} from 'react-bootstrap';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import {toast} from 'react-toastify';
 import {
-    useGetMatrimonialProfileDetailsQuery,
     useCreateMatrimonialProfileMutation,
+    useGetMatrimonialProfileDetailsQuery,
     useUpdateMatrimonialProfileMutation,
     useUploadMatrimonialProfileImageMutation,
 } from '../slices/matrimonialProfilesApiSlice';
@@ -13,12 +13,16 @@ import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
-import {predCurrentMaritalStatus, predGender, predImmigrationStatusOfCandidate, predbelieveInKundli} from '../utils/preDefinedAttributes';
+import {
+    predbelieveInKundli,
+    predCurrentMaritalStatus,
+    predGender,
+    predImmigrationStatusOfCandidate
+} from '../utils/preDefinedAttributes';
 
 const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
-
     const [image, setImage] = useState('');
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
@@ -60,13 +64,14 @@ const MatrimonialProfilePage = () => {
 
     const [createMatrimonialProfile, {isLoading: isCreateMatrimonialProfileLoading}] =
         useCreateMatrimonialProfileMutation();
-    const [updateMatrimonialProfile, {isLoading: isUpdateMatrimonialProfileLoading}] =
-        useUpdateMatrimonialProfileMutation();
+
     const [uploadMatrimonialProfileImage, {isLoading: isUploadImageLoading}] =
         useUploadMatrimonialProfileImageMutation();
 
-    const navigate = useNavigate();
+    const [updateMatrimonialProfile, {isLoading: isUpdateMatrimonialProfileLoading}] =
+        useUpdateMatrimonialProfileMutation();
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isUpdateMode && matrimonialProfile) {
@@ -101,6 +106,7 @@ const MatrimonialProfilePage = () => {
             setCorrectInformation(matrimonialProfile.correctInformation);
         }
     }, [isUpdateMode, matrimonialProfile]);
+
 
     const uploadFileHandler = async e => {
         const formData = new FormData();
@@ -149,20 +155,36 @@ const MatrimonialProfilePage = () => {
                 correctInformation
             };
             if (isUpdateMode) {
+                alert("ok")
                 const {data} = await updateMatrimonialProfile({
                     matrimonialProfileId,
                     ...matrimonialProfileData
+                }).catch(errors => {
+                    // we can do some special error handling
+                    alert("hello");
+                    // and throw back the error
                 });
-                toast.success(data.message);
-            } else {
-                const {data} = await createMatrimonialProfile(matrimonialProfileData);
-                toast.success(data.message);
                 console.log("1");
+                console.log(data);
+                if (data) {
+                    toast.success(data.message);
+                }
+            } else {
+                try {
+                    const {data} = await createMatrimonialProfile(matrimonialProfileData);
+                    if (data) {
+                        toast.success(data.message);
+                    }
+                    console.log("1");
+                } catch (errors) {
+                    console.log(errors);
+                    console.log("2");
+
+                }
             }
-            navigate('/matrimonialProfile');
+            navigate('/matrimonialHomePage');
         } catch (errors) {
             toast.error(errors?.data?.message || errors.errors);
-            console.log("2");
         }
     };
 
@@ -170,14 +192,16 @@ const MatrimonialProfilePage = () => {
     return (
         <>
             <Meta title={'Matrimonial Profile Form'}/>
-            <Link 
-                to={!isUpdateMode ? '/matrimonialProfile' : '/matrimonialProfile/'+matrimonialProfileId}
+            <Link
+                to={!isUpdateMode ? '/matrimonialProfile' : '/matrimonialProfile/' + matrimonialProfileId}
                 className='btn btn-light my-3'>
                 Go Back
             </Link>
+
             {(isUpdateMatrimonialProfileLoading ||
                 isCreateMatrimonialProfileLoading ||
                 isUploadImageLoading) && <Loader/>}
+
             {isLoading ? (
                 <Loader/>
             ) : errors ? (
@@ -227,14 +251,14 @@ const MatrimonialProfilePage = () => {
                                     <Row>
                                         {Object.entries(predGender).map(([key, value]) => (
                                             <Col md={2} key={value}>
-                                              <input
-                                                type="radio"
-                                                name="gender"
-                                                value={key}
-                                                checked={gender == key}
-                                                onChange={e => setGender(e.target.value)}
-                                              />
-                                              <label>{value}</label>
+                                                <input
+                                                    type="radio"
+                                                    name="gender"
+                                                    value={key}
+                                                    checked={gender == key}
+                                                    onChange={e => setGender(e.target.value)}
+                                                />
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -305,14 +329,14 @@ const MatrimonialProfilePage = () => {
                                     <Row>
                                         {Object.entries(predCurrentMaritalStatus).map(([key, value]) => (
                                             <Col md={3} key={value}>
-                                              <input
-                                                type="radio"
-                                                name="currentMaritalStatus"
-                                                value={key}
-                                                checked={currentMaritalStatus == key}
-                                                onChange={e => setCurrentMaritalStatus(e.target.value)}
-                                              />
-                                              <label>{value}</label>
+                                                <input
+                                                    type="radio"
+                                                    name="currentMaritalStatus"
+                                                    value={key}
+                                                    checked={currentMaritalStatus == key}
+                                                    onChange={e => setCurrentMaritalStatus(e.target.value)}
+                                                />
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -373,15 +397,15 @@ const MatrimonialProfilePage = () => {
                                     <Row>
                                         {Object.entries(predImmigrationStatusOfCandidate).map(([key, value]) => (
                                             <Col md={6} key={value}>
-                                              <input
-                                                type="radio"
-                                                name="immigrationStatusOfCandidate"
-                                                value={key}
-                                                checked={immigrationStatusOfCandidate === key}
-                                                onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                                class="mb-3"
-                                              />
-                                              <label>{value}</label>
+                                                <input
+                                                    type="radio"
+                                                    name="immigrationStatusOfCandidate"
+                                                    value={key}
+                                                    checked={immigrationStatusOfCandidate === key}
+                                                    onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
+                                                    class="mb-3"
+                                                />
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -499,14 +523,14 @@ const MatrimonialProfilePage = () => {
                                     <Row>
                                         {Object.entries(predbelieveInKundli).map(([key, value]) => (
                                             <Col md={2} mb={2} key={value}>
-                                              <input
-                                                type="radio"
-                                                name="believeInKundli"
-                                                value={key}
-                                                checked={believeInKundli == key}
-                                                onChange={e => setBelieveInKundli(e.target.value)}
-                                              />
-                                              <label>{value}</label>
+                                                <input
+                                                    type="radio"
+                                                    name="believeInKundli"
+                                                    value={key}
+                                                    checked={believeInKundli == key}
+                                                    onChange={e => setBelieveInKundli(e.target.value)}
+                                                />
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -525,9 +549,10 @@ const MatrimonialProfilePage = () => {
                                     ></Form.Control>
                                 </Form.Group>
 
-                                {!isUpdateMode ? 
+                                {!isUpdateMode ?
                                     <Form.Group className='attribute'>
-                                        <p>I do hereby acknowledge that all the details provided above is correct and I willfully wish to share my details in this portal.</p>
+                                        <p>I do hereby acknowledge that all the details provided above is correct and I
+                                            willfully wish to share my details in this portal.</p>
                                         <input
                                             type="radio"
                                             name="correctInformation"
@@ -542,7 +567,7 @@ const MatrimonialProfilePage = () => {
                                             onChange={e => setCorrectInformation(e.target.value)}
                                         /> No
                                     </Form.Group>
-                                : ''}
+                                    : ''}
                             </Col>
                         </Row>
 
