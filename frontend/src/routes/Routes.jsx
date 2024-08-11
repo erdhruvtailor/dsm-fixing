@@ -3,8 +3,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
 import HomePage from '../pages/HomePage';
 import AboutUs from '../pages/AboutUs';
+import MatrimonialHomePage from '../pages/MatrimonialHomePage';
 import MatrimonialProfilePage from '../pages/MatrimonialProfilePage';
-import MatrimonialFormPage from '../pages/MatrimonialFormPage';
+import MatrimonialAddFormPage from '../pages/MatrimonialAddFormPage';
+import MatrimonialUpdateFormPage from '../pages/MatrimonialUpdateFormPage';
 import MatrimonialListPage from '../pages/admin/MatrimonialListPage';
 import ProductPage from '../pages/ProductPage';
 import CartPage from '../pages/CartPage';
@@ -32,6 +34,7 @@ import AdminProfilePage from '../pages/admin/AdminProfilePage';
 import AdminListPage from '../pages/admin/AdminListPage';
 import ResetPasswordRequestPage from '../pages/ResetPasswordRequestPage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
+import ComingsoonPage from "../pages/ComingsoonPage";
 
 const router = createBrowserRouter([
   {
@@ -56,20 +59,28 @@ const router = createBrowserRouter([
         element: <RegisterPage />
       },
       {
-        path: '/matrimonialProfile',
-        element: <MatrimonialProfilePage />
+        path: '/ComingsoonPage',
+        element: <ComingsoonPage />
+      },
+      {
+        path: '/matrimonialProfile/create',
+        element: <MatrimonialAddFormPage />
+      },
+      {
+        path: '/matrimonialHomePage',
+        element: <MatrimonialHomePage showMyPanel={false}/>
+      },
+      {
+        path: '/matrimonialHomePage/my-panel',
+        element: <MatrimonialHomePage showMyPanel={true} />
       },
       {
         path: '/matrimonialProfile/:id',
         element: <MatrimonialProfilePage />
       },
       {
-        path: '/matrimonialProfile/create',
-        element: <MatrimonialFormPage />
-      },
-      {
         path: '/matrimonialProfile/update/:id',
-        element: <MatrimonialFormPage />
+        element: <MatrimonialUpdateFormPage />
       },
       // {
       //   path: '/admin/product/create',

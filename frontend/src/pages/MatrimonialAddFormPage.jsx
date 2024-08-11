@@ -3,8 +3,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Col, Form, Row} from 'react-bootstrap';
 import {toast} from 'react-toastify';
 import {
-    useGetMatrimonialProfileDetailsQuery,
-    useUpdateMatrimonialProfileMutation,
+    useCreateMatrimonialProfileMutation,
     useUploadMatrimonialProfileImageMutation,
 } from '../slices/matrimonialProfilesApiSlice';
 
@@ -18,14 +17,19 @@ import {
     preLifestyleHabits,
     predCurrentMaritalStatus,
     predGender,
+    preInterests,
     predImmigrationStatusOfCandidate,
 } from '../utils/preDefinedAttributes';
 import {FaBackward, FaPlus} from "react-icons/fa6";
-import "../assets/styles/MatrimonialFormPage.css";
-import {generateRandomFilename} from "../utils/generateRandomFilename"; // Custom styles
+import {generateRandomFilename} from '../utils/generateRandomFilename';
 import "../assets/styles/MatrimonialFormPage.css"; // Custom styles
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {LocalizationProvider, TimePicker} from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {styled, TextField} from "@mui/material";
 
-const MatrimonialUpdateFormPage = () => {
+
+const MatrimonialAddFormPage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
     const [image, setImage] = useState(null);
@@ -61,57 +65,33 @@ const MatrimonialUpdateFormPage = () => {
     const [correctInformation, setCorrectInformation] = useState('');
     const [profileImageName, setProfileImageName] = useState('No file chosen');
 
-    const navigate = useNavigate();
-
-    const getMatrimonialProfileQueryResult = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
-    const {
-        data: matrimonialProfile,
-        isLoading,
-        errors
-    } = isUpdateMode
-        ? getMatrimonialProfileQueryResult
-        : {data: null, isLoading: false, errors: null};
-
+    const [createMatrimonialProfile, {isLoading: isCreateMatrimonialProfileLoading}, err] =
+        useCreateMatrimonialProfileMutation();
     const [uploadMatrimonialProfileImage, {isLoading: isUploadImageLoading}] =
         useUploadMatrimonialProfileImageMutation();
-    const [updateMatrimonialProfile, {isLoading: isUpdateMatrimonialProfileLoading}] =
-        useUpdateMatrimonialProfileMutation();
 
-    useEffect(() => {
-        if (isUpdateMode && matrimonialProfile) {
-            setImage(matrimonialProfile.image);
-            setEmail(matrimonialProfile.email);
-            setFullName(matrimonialProfile.fullName);
-            setGender(matrimonialProfile.gender);
-            setBirthDate(matrimonialProfile.birthDate);
-            setBirthTime(matrimonialProfile.birthTime);
-            setBirthPlace(matrimonialProfile.birthPlace);
-            setHeight(matrimonialProfile.height);
-            setWeight(matrimonialProfile.weight);
-            setInterests(matrimonialProfile.interests);
-            setCurrentMaritalStatus(matrimonialProfile.currentMaritalStatus);
-            setCurrentAddressOfCandidate(matrimonialProfile.currentAddressOfCandidate);
-            setCurrentCountryOfCandidate(matrimonialProfile.currentCountryOfCandidate);
-            setCurrentAddressOfFamily(matrimonialProfile.currentAddressOfFamily);
-            setContactNumber(matrimonialProfile.contactNumber);
-            setImmigrationStatusOfCandidate(matrimonialProfile.immigrationStatusOfCandidate);
-            setHighestEducationOfCandidate(matrimonialProfile.highestEducationOfCandidate);
-            setProfessionalDetailsOfCandidate(matrimonialProfile.professionalDetailsOfCandidate);
-            setFatherFullName(matrimonialProfile.fatherFullName);
-            setFatherContactNumber(matrimonialProfile.fatherContactNumber);
-            setMotherFullName(matrimonialProfile.motherFullName);
-            setFatherNativeTown(matrimonialProfile.fatherNativeTown);
-            setMotherNativeTown(matrimonialProfile.motherNativeTown);
-            setDetailsOfSiblings(matrimonialProfile.detailsOfSiblings);
-            setMaternalUncleName(matrimonialProfile.maternalUncleName);
-            setDetailsOfMosal(matrimonialProfile.detailsOfMosal);
-            setBelieveInKundli(matrimonialProfile.believeInKundli);
-            setLifestyleHabits(matrimonialProfile.lifestyleHabits);
-            setDietPreference(matrimonialProfile.dietPreference);
-            setExpectationFromLifePartner(matrimonialProfile.expectationFromLifePartner);
-            setCorrectInformation(matrimonialProfile.correctInformation);
+    const navigate = useNavigate();
+
+    /*const uploadFileHandler = async e => {
+        const formData = new FormData();
+        formData.append('image', e.target.files[0]);
+        try {
+            const res = await uploadMatrimonialProfileImage(formData).unwrap();
+            setImage(res.imageUrl);
+            toast.success(res.message);
+        } catch (error) {
+            toast.error(error?.data?.message || error.error);
         }
-    }, [isUpdateMode, matrimonialProfile]);
+    };*/
+
+    /*const generateRandomFilename = (length = 12) => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    };*/
 
     const uploadFileHandler = async e => {
         const profileImagefile = e.target.files[0];
@@ -133,6 +113,18 @@ const MatrimonialUpdateFormPage = () => {
             toast.error(error?.data?.message || error.error);
         }
     };
+
+    /*const uploadFileHandler = async e => {
+        const formData = new FormData();
+        formData.append('image', e.target.files[0]);
+        try {
+            const res = await uploadMatrimonialProfileImage(formData).unwrap();
+            setImage(res.imageUrl);
+            toast.success(res.message);
+        } catch (error) {
+            toast.error(error?.data?.message || error.error);
+        }
+    };*/
 
     const submitHandler = async e => {
         e.preventDefault();
@@ -171,68 +163,70 @@ const MatrimonialUpdateFormPage = () => {
             return false;
         }*/
 
+        const matrimonialProfileData = {
+            image,
+            email,
+            fullName,
+            gender,
+            birthDate,
+            birthTime,
+            birthPlace,
+            height,
+            weight,
+            interests,
+            currentMaritalStatus,
+            currentAddressOfCandidate,
+            currentCountryOfCandidate,
+            currentAddressOfFamily,
+            contactNumber,
+            immigrationStatusOfCandidate,
+            highestEducationOfCandidate,
+            professionalDetailsOfCandidate,
+            fatherFullName,
+            fatherContactNumber,
+            motherFullName,
+            fatherNativeTown,
+            motherNativeTown,
+            detailsOfSiblings,
+            maternalUncleName,
+            detailsOfMosal,
+            believeInKundli,
+            dietPreference,
+            lifestyleHabits,
+            expectationFromLifePartner,
+            correctInformation
+        };
+
+        /*try {
+            const {data} = await createMatrimonialProfile(matrimonialProfileData);
+            if (data) {
+                toast.success(data.message);
+            }
+            // navigate('/matrimonialHomePage');
+        } catch (err) {
+            console.log(err);
+            // console.error('Fetch error:', err.message);
+            toast.error(err?.data?.message || err.errors);
+        }*/
+
         try {
-            const matrimonialProfileData = {
-                image,
-                email,
-                fullName,
-                gender,
-                birthDate,
-                birthTime,
-                birthPlace,
-                height,
-                weight,
-                interests,
-                currentMaritalStatus,
-                currentAddressOfCandidate,
-                currentCountryOfCandidate,
-                currentAddressOfFamily,
-                contactNumber,
-                immigrationStatusOfCandidate,
-                highestEducationOfCandidate,
-                professionalDetailsOfCandidate,
-                fatherFullName,
-                fatherContactNumber,
-                motherFullName,
-                fatherNativeTown,
-                motherNativeTown,
-                detailsOfSiblings,
-                maternalUncleName,
-                detailsOfMosal,
-                believeInKundli,
-                dietPreference,
-                lifestyleHabits,
-                expectationFromLifePartner,
-                correctInformation
-            };
+            var {data} = await createMatrimonialProfile(matrimonialProfileData);
 
-            if (isUpdateMode) {
-                try {
-                    const {data} = await updateMatrimonialProfile({
-                        matrimonialProfileId,
-                        ...matrimonialProfileData
-                    });
-
-                    if (data) {
-                        if (data.error) {
-                            if (data.error && data.error.status === 400 && data.error.data.errors) {
-                                // Extract validation messages and show them in a toast
-                                const errorMessage = data.error.data.errors.map(error => error.msg).join(', ');
-                                toast.error(errorMessage);
-                            } else {
-                                toast.error(data.error?.data?.message || data.error.data.message || 'An unknown error occurred');
-                            }
-                        } else {
-                            toast.success(data.message);
-                            navigate('/matrimonialHomePage');
-                        }
+            if (data) {
+                if (data.error) {
+                    if (data.error && data.error.status === 400 && data.error.data.errors) {
+                        // Extract validation messages and show them in a toast
+                        const errorMessage = data.error.data.errors.map(error => error.msg).join(', ');
+                        toast.error(errorMessage);
+                    } else {
+                        toast.error(data.error?.data?.message || data.error.data.message || 'An unknown error occurred');
                     }
-                } catch (err) {
+                } else {
+                    toast.success(data.message);
+                    navigate('/matrimonialHomePage');
                 }
             }
-            navigate('/matrimonialHomePage');
-        } catch (errors) {
-            toast.error(errors?.data?.message || errors.errors);
+        } catch (err) {
         }
     };
 
@@ -244,11 +238,11 @@ const MatrimonialUpdateFormPage = () => {
         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)' // Optional: adds shadow for better contrast
     };
 
-    const handleCheckboxChange = (key) => {
-        setLifestyleHabits((prevHabits) =>
-            prevHabits.includes(key)
-                ? prevHabits.filter((habit) => habit !== key)
-                : [...prevHabits, key]
+    const handleCheckboxChange = (value) => {
+        setLifestyleHabits(prevState =>
+            prevState.includes(value)
+                ? prevState.filter(item => item !== value)
+                : [...prevState, value]
         );
     };
 
@@ -259,20 +253,25 @@ const MatrimonialUpdateFormPage = () => {
                 to='/matrimonialHomePage' className='btn btn-light my-3'><FaBackward size={20}/> &nbsp; Back
             </Link>
 
-            {(isUpdateMatrimonialProfileLoading || isUploadImageLoading) && <Loader/>}
+            {(isCreateMatrimonialProfileLoading ||
+                isUploadImageLoading) && <Loader/>}
 
-            {(isUpdateMatrimonialProfileLoading || isUploadImageLoading) ? (
+            {(isCreateMatrimonialProfileLoading ||
+                isUploadImageLoading) ? (
                 <Loader/>
-            ) : errors ? (
+            ) : err ? (
                 <Message variant='danger'>
-                    {errors?.data?.message || errors.errors}
+                    {err?.data?.message || err.errors}
                 </Message>
             ) : (
                 <FormContainer>
                     <Meta title={'Matrimonial Profile Form'}/>
-                    <h4 style={headingStyle}>Update Matrimonial Profile</h4>
+                    <h3 style={headingStyle}>
+                        Matrimonial Registration
+                    </h3>
 
                     <Form onSubmit={submitHandler}>
+
                         <Row>
                             <Col md={6}>
 
@@ -351,6 +350,57 @@ const MatrimonialUpdateFormPage = () => {
                                     ></Form.Control>
                                     <span className="error-message" id="birthDate-error">Field is required</span>
                                 </Form.Group>
+
+                                {/*<Form.Group controlId='birthTime' className='attribute'>
+                                    <Form.Label>Birth Time</Form.Label>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <TimePicker
+                                            label="Select Birth Time"
+                                            value={birthTime}
+                                            onChange={(newValue) => {
+                                                // Convert to time-only string
+                                                const timeOnly = newValue ? newValue.toISOString().split('T')[1].split('.')[0] : null;
+                                                setBirthTime(timeOnly);
+                                            }}
+                                            renderInput={(params) => <TextField
+                                                {...params}
+                                                sx={{
+                                                    '& .MuiFormHelperText-root.Mui-error': {
+                                                        color: 'transparent', // Hide error text
+                                                    },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '& fieldset': {
+                                                            borderColor: '#dee2e6', // Default outline color
+                                                        },
+                                                        '&:hover fieldset': {
+                                                            borderColor: '#dee2e6 !important', // Outline color on hover
+                                                        },
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: '#dee2e6 !important', // Outline color when focused
+                                                        },
+                                                        '&.Mui-error fieldset': {
+                                                            borderColor: '#dee2e6 !important', // Outline color when error
+                                                        },
+                                                    },
+                                                    '& .MuiInputLabel-root': {
+                                                        color: '#dee2e6', // Default label color
+                                                        '&.Mui-focused': {
+                                                            color: '#dee2e6 !important', // Label color when focused
+                                                        },
+                                                        '&.Mui-error': {
+                                                            color: '#dee2e6 !important', // Label color when error
+                                                        },
+                                                    },
+                                                    '& .MuiInputBase-input': {
+                                                        color: '#dee2e6', // Input text color
+                                                    },
+                                                }}
+                                            />}
+                                            ampm={false} // 24-hour format
+                                        />
+                                    </LocalizationProvider>
+                                    <span className="error-message" id="birthTime-error">Field is required</span>
+                                </Form.Group>*/}
 
                                 <Form.Group controlId='birthDate' className='attribute'>
                                     <Form.Label>Birth Time</Form.Label>
@@ -665,26 +715,25 @@ const MatrimonialUpdateFormPage = () => {
                                 </Form.Group>
 
                                 {/*LifestyleHabits*/}
-                                {/*<Form.Group className='attribute'>
+                                <Form.Group className='attribute'>
                                     <Form.Label className='attribute'>Lifestyle Habits?</Form.Label>
                                     <Row>
                                         {Object.entries(preLifestyleHabits).map(([key, value]) => (
-                                            <Col md={6} className="mb-2" key={key}>
+                                            <Col md={6} mb={2} key={key}>
                                                 <input
                                                     type="checkbox"
                                                     name="lifestyleHabits"
                                                     value={key}
-                                                    id={'lifestyleHabits' + key}
-                                                    // Check that lifestyleHabits is defined and is an array
-                                                    checked={Array.isArray(lifestyleHabits) && lifestyleHabits.includes(key)}
+                                                    id={'lifestyleHabits'+key}
+                                                    checked={lifestyleHabits.includes(key)}
                                                     onChange={() => handleCheckboxChange(key)}
                                                 />
-                                                <label htmlFor={'lifestyleHabits' + key}>&nbsp;{value}</label>
+                                                <label htmlFor={'lifestyleHabits'+key}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
-                                    </Row>>
+                                    </Row>
                                     <span className="error-message" id="lifestyleHabits-error">Field is required</span>
-                                </Form.Group>*/}
+                                </Form.Group>
 
                                 <Form.Group controlId='expectationFromLifePartner' className='attribute'>
                                     <Form.Label>Expectation From LifePartner</Form.Label>
@@ -703,23 +752,30 @@ const MatrimonialUpdateFormPage = () => {
                                     <Form.Group className='attribute'>
                                         <p>I do hereby acknowledge that all the details provided above is correct and I
                                             willfully wish to share my details in this portal.</p>
-                                        <input
-                                            type="radio"
-                                            name="correctInformation"
-                                            value="Yes"
-                                            onChange={e => setCorrectInformation(e.target.value)}
-                                        /> Yes
-
-                                        <input
-                                            type="radio"
-                                            name="correctInformation"
-                                            value="Yes"
-                                            onChange={e => setCorrectInformation(e.target.value)}
-                                        /> No
+                                        <Col md={2} mb={2}>
+                                            <input
+                                                type="radio"
+                                                name="correctInformation"
+                                                value="Yes"
+                                                id="yes"
+                                                onChange={e => setCorrectInformation(e.target.value)}
+                                            /> <label htmlFor="yes">&nbsp;Yes</label>
+                                        </Col>
+                                        <Col md={2} mb={2}>
+                                            <input
+                                                type="radio"
+                                                name="correctInformation"
+                                                value="no"
+                                                id="no"
+                                            /> <label htmlFor="no">&nbsp;No</label>
+                                        </Col>
+                                        <span className="error-message"
+                                              id="correctInformation-error">Field is required</span>
                                     </Form.Group>
                                     : ''}
                             </Col>
                         </Row>
+
 
                         <Button
                             type='submit'
@@ -728,7 +784,6 @@ const MatrimonialUpdateFormPage = () => {
                         >
                             {isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}
                         </Button>
-
                     </Form>
                 </FormContainer>
             )}
@@ -736,4 +791,4 @@ const MatrimonialUpdateFormPage = () => {
     );
 };
 
-export default MatrimonialUpdateFormPage;
+export default MatrimonialAddFormPage;

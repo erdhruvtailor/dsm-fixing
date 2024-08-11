@@ -1,14 +1,14 @@
-import {MATRIMONIAL_URL, PRODUCTS_URL, UPLOAD_URL} from '../constants';
+import {MATRIMONIAL_URL, UPLOAD_URL} from '../constants';
 import { apiSlice } from './apiSlice';
 
 export const matrimonialProfileApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getMatrimonialProfile: builder.query({
-      query: ({ limit, skip, search }) => ({
+      query: ({ limit, skip, isMyPanel }) => ({
         url: MATRIMONIAL_URL,
-        params: { limit, skip, search }
+        params: { limit, skip, isMyPanel }
       }),
-      providesTags: ['MatrimonialProfile']
+      providesTags: ['MatrimonialHomePage']
     }),
     getMatrimonialProfileDetails: builder.query({
       query: matrimonialProfileId => ({

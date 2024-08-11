@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button, Form, Row, Col, Image} from 'react-bootstrap';
 import {toast} from 'react-toastify';
 import {
     useGetMatrimonialProfileDetailsQuery,
+    useCreateMatrimonialProfileMutation,
     useUpdateMatrimonialProfileMutation,
     useUploadMatrimonialProfileImageMutation,
 } from '../slices/matrimonialProfilesApiSlice';
@@ -13,22 +14,16 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import {
-    predbelieveInKundli,
-    preDietPreference,
-    preLifestyleHabits,
     predCurrentMaritalStatus,
     predGender,
     predImmigrationStatusOfCandidate,
+    predbelieveInKundli
 } from '../utils/preDefinedAttributes';
-import {FaBackward, FaPlus} from "react-icons/fa6";
-import "../assets/styles/MatrimonialFormPage.css";
-import {generateRandomFilename} from "../utils/generateRandomFilename"; // Custom styles
-import "../assets/styles/MatrimonialFormPage.css"; // Custom styles
 
-const MatrimonialUpdateFormPage = () => {
+const MatrimonialProfilePage = () => {
     const {id: matrimonialProfileId} = useParams();
     const isUpdateMode = !!matrimonialProfileId;
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState('');
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [gender, setGender] = useState('');
@@ -55,13 +50,8 @@ const MatrimonialUpdateFormPage = () => {
     const [maternalUncleName, setMaternalUncleName] = useState('');
     const [detailsOfMosal, setDetailsOfMosal] = useState('');
     const [believeInKundli, setBelieveInKundli] = useState('');
-    const [lifestyleHabits, setLifestyleHabits] = useState('');
-    const [dietPreference, setDietPreference] = useState('');
     const [expectationFromLifePartner, setExpectationFromLifePartner] = useState('');
     const [correctInformation, setCorrectInformation] = useState('');
-    const [profileImageName, setProfileImageName] = useState('No file chosen');
-
-    const navigate = useNavigate();
 
     const getMatrimonialProfileQueryResult = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
     const {
@@ -72,10 +62,15 @@ const MatrimonialUpdateFormPage = () => {
         ? getMatrimonialProfileQueryResult
         : {data: null, isLoading: false, errors: null};
 
-    const [uploadMatrimonialProfileImage, {isLoading: isUploadImageLoading}] =
-        useUploadMatrimonialProfileImageMutation();
+    const [createMatrimonialProfile, {isLoading: isCreateMatrimonialProfileLoading}] =
+        useCreateMatrimonialProfileMutation();
     const [updateMatrimonialProfile, {isLoading: isUpdateMatrimonialProfileLoading}] =
         useUpdateMatrimonialProfileMutation();
+    const [uploadMatrimonialProfileImage, {isLoading: isUploadImageLoading}] =
+        useUploadMatrimonialProfileImageMutation();
+
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (isUpdateMode && matrimonialProfile) {
@@ -106,28 +101,17 @@ const MatrimonialUpdateFormPage = () => {
             setMaternalUncleName(matrimonialProfile.maternalUncleName);
             setDetailsOfMosal(matrimonialProfile.detailsOfMosal);
             setBelieveInKundli(matrimonialProfile.believeInKundli);
-            setLifestyleHabits(matrimonialProfile.lifestyleHabits);
-            setDietPreference(matrimonialProfile.dietPreference);
             setExpectationFromLifePartner(matrimonialProfile.expectationFromLifePartner);
             setCorrectInformation(matrimonialProfile.correctInformation);
         }
     }, [isUpdateMode, matrimonialProfile]);
 
     const uploadFileHandler = async e => {
-        const profileImagefile = e.target.files[0];
-        if (!profileImagefile) return;
-
-        // Generate a new random filename
-        const newProfileImageName = `${generateRandomFilename()}${profileImagefile.name.substring(profileImagefile.name.lastIndexOf('.'))}`;
-
-        // Create a new FormData object and append the file with the new filename
         const formData = new FormData();
-        formData.append('image', new File([profileImagefile], newProfileImageName, {type: profileImagefile.type}));
-
+        formData.append('image', e.target.files[0]);
         try {
             const res = await uploadMatrimonialProfileImage(formData).unwrap();
             setImage(res.imageUrl);
-            setProfileImageName(newProfileImageName); // Update the state with the new file name
             toast.success(res.message);
         } catch (error) {
             toast.error(error?.data?.message || error.error);
@@ -136,41 +120,6 @@ const MatrimonialUpdateFormPage = () => {
 
     const submitHandler = async e => {
         e.preventDefault();
-
-        /*const fields = [
-            'image', 'email', 'fullName', 'gender', 'birthDate', 'birthTime', 'birthPlace', 'height', 'weight', 'interests',
-            'currentMaritalStatus', 'currentAddressOfCandidate', 'currentCountryOfCandidate', 'currentAddressOfFamily', 'contactNumber',
-            'immigrationStatusOfCandidate', 'highestEducationOfCandidate', 'professionalDetailsOfCandidate', 'fatherFullName', 'fatherContactNumber',
-            'motherFullName', 'fatherNativeTown', 'motherNativeTown', 'detailsOfSiblings', 'maternalUncleName', 'detailsOfMosal', 'believeInKundli','dietPreference', 'lifestyleHabits',
-            'expectationFromLifePartner', 'correctInformation'
-        ];
-
-        let isValid = true;
-
-        fields.forEach(field => {
-            const element = document.getElementById(field);
-            const errorElement = document.getElementById(`${field}-error`);
-            if (!element) return;
-
-            if ((element.type === 'radio' || element.type === 'checkbox') && !document.querySelector(`input[name="${field}"]:checked`)) {
-                element.classList.add('error');
-                if (errorElement) errorElement.style.display = 'inline';
-                isValid = false;
-            } else if (!element.value) {
-                element.classList.add('error');
-                if (errorElement) errorElement.style.display = 'inline';
-                isValid = false;
-            } else {
-                element.classList.remove('error');
-                if (errorElement) errorElement.style.display = 'none';
-            }
-        });
-
-        if (!isValid) {
-            e.preventDefault();
-            return false;
-        }*/
-
         try {
             const matrimonialProfileData = {
                 image,
@@ -200,68 +149,45 @@ const MatrimonialUpdateFormPage = () => {
                 maternalUncleName,
                 detailsOfMosal,
                 believeInKundli,
-                dietPreference,
-                lifestyleHabits,
                 expectationFromLifePartner,
                 correctInformation
             };
-
             if (isUpdateMode) {
+                const {data} = await updateMatrimonialProfile({
+                    matrimonialProfileId,
+                    ...matrimonialProfileData
+                });
+                toast.success(data.message);
+            } else {
                 try {
-                    const {data} = await updateMatrimonialProfile({
-                        matrimonialProfileId,
-                        ...matrimonialProfileData
-                    });
+                    const {data} = await createMatrimonialProfile(matrimonialProfileData);
+                    toast.success(data.message);
+                    console.log("1");
+                } catch (errors) {
+                    console.log(errors);
+                    console.log("2");
 
-                    if (data) {
-                        if (data.error) {
-                            if (data.error && data.error.status === 400 && data.error.data.errors) {
-                                // Extract validation messages and show them in a toast
-                                const errorMessage = data.error.data.errors.map(error => error.msg).join(', ');
-                                toast.error(errorMessage);
-                            } else {
-                                toast.error(data.error?.data?.message || data.error.data.message || 'An unknown error occurred');
-                            }
-                        } else {
-                            toast.success(data.message);
-                            navigate('/matrimonialHomePage');
-                        }
-                    }
-                } catch (err) {
                 }
             }
-            navigate('/matrimonialHomePage');
+            navigate('/matrimonialProfile');
         } catch (errors) {
             toast.error(errors?.data?.message || errors.errors);
         }
     };
 
-    const headingStyle = {
-        color: 'rgb(220, 53, 69)', // Primary color
-        fontWeight: 'bold',
-        textAlign: 'center',
-        margin: '20px 0',
-        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)' // Optional: adds shadow for better contrast
-    };
-
-    const handleCheckboxChange = (key) => {
-        setLifestyleHabits((prevHabits) =>
-            prevHabits.includes(key)
-                ? prevHabits.filter((habit) => habit !== key)
-                : [...prevHabits, key]
-        );
-    };
 
     return (
         <>
             <Meta title={'Matrimonial Profile Form'}/>
             <Link
-                to='/matrimonialHomePage' className='btn btn-light my-3'><FaBackward size={20}/> &nbsp; Back
+                to={!isUpdateMode ? '/matrimonialProfile' : '/matrimonialProfile/' + matrimonialProfileId}
+                className='btn btn-light my-3'>
+                Go Back
             </Link>
-
-            {(isUpdateMatrimonialProfileLoading || isUploadImageLoading) && <Loader/>}
-
-            {(isUpdateMatrimonialProfileLoading || isUploadImageLoading) ? (
+            {(isUpdateMatrimonialProfileLoading ||
+                isCreateMatrimonialProfileLoading ||
+                isUploadImageLoading) && <Loader/>}
+            {isLoading ? (
                 <Loader/>
             ) : errors ? (
                 <Message variant='danger'>
@@ -270,34 +196,20 @@ const MatrimonialUpdateFormPage = () => {
             ) : (
                 <FormContainer>
                     <Meta title={'Matrimonial Profile Form'}/>
-                    <h4 style={headingStyle}>Update Matrimonial Profile</h4>
+                    <h4>{isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}</h4>
 
                     <Form onSubmit={submitHandler}>
+
                         <Row>
                             <Col md={6}>
 
                                 <Form.Group controlId='image' className='attribute'>
-                                    <Form.Label>Profile Photo</Form.Label>
-                                    <div className="custom-file">
-                                        <Form.Control
-                                            type='file'
-                                            onChange={uploadFileHandler}
-                                            id="image"
-                                            className="custom-file-input"
-                                        />
-                                        <label className="custom-file-label" htmlFor="image">
-                                            {profileImageName}
-                                        </label>
-                                    </div>
-                                    <span className="error-message" id="image-error">Field is required</span>
+                                    <Form.Label>Image</Form.Label>
+                                    <Form.Control
+                                        type='file'
+                                        onChange={uploadFileHandler}
+                                    ></Form.Control>
                                 </Form.Group>
-
-                                {image && (
-                                    <div className="image-preview">
-                                        <img src={image} alt="Uploaded preview"
-                                             style={{maxWidth: '100%', maxHeight: '200px'}}/>
-                                    </div>
-                                )}
 
                                 <Form.Group controlId='email' className='attribute'>
                                     <Form.Label>Email</Form.Label>
@@ -307,7 +219,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={email}
                                         onChange={e => setEmail(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="email-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='fullName' className='attribute'>
@@ -318,7 +229,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={fullName}
                                         onChange={e => setFullName(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="fullName-error">Field is required</span>
                                 </Form.Group>
 
                                 {/*gender*/}
@@ -330,15 +240,13 @@ const MatrimonialUpdateFormPage = () => {
                                                     type="radio"
                                                     name="gender"
                                                     value={key}
-                                                    id={key}
                                                     checked={gender == key}
                                                     onChange={e => setGender(e.target.value)}
                                                 />
-                                                <label htmlFor={key}>&nbsp;{value}</label>
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
-                                    <span className="error-message" id="gender-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='birthDate' className='attribute'>
@@ -349,7 +257,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={birthDate}
                                         onChange={e => setBirthDate(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="birthDate-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='birthDate' className='attribute'>
@@ -360,7 +267,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={birthTime}
                                         onChange={e => setBirthTime(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="birthTime-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='birthPlace' className='attribute'>
@@ -371,7 +277,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={birthPlace}
                                         onChange={e => setBirthPlace(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="birthPlace-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='height' className='attribute'>
@@ -382,7 +287,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={height}
                                         onChange={e => setHeight(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="height-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='weight' className='attribute'>
@@ -393,39 +297,34 @@ const MatrimonialUpdateFormPage = () => {
                                         value={weight}
                                         onChange={e => setWeight(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="weight-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='interests' className='attribute'>
                                     <Form.Label>Interests</Form.Label>
                                     <Form.Control
                                         type='text'
+                                        placeholder='Enter interests'
                                         value={interests}
                                         onChange={e => setInterests(e.target.value)}
-                                        placeholder="Select your interests..."
                                     ></Form.Control>
                                 </Form.Group>
 
                                 {/*currentMaritalStatus*/}
                                 <Form.Group className='attribute'>
-                                    <Form.Label>Current Marital Status</Form.Label>
                                     <Row>
                                         {Object.entries(predCurrentMaritalStatus).map(([key, value]) => (
-                                            <Col md={4} key={value}>
+                                            <Col md={3} key={value}>
                                                 <input
                                                     type="radio"
                                                     name="currentMaritalStatus"
                                                     value={key}
-                                                    id={key + "currentMaritalStatus"}
                                                     checked={currentMaritalStatus == key}
                                                     onChange={e => setCurrentMaritalStatus(e.target.value)}
                                                 />
-                                                <label htmlFor={key + "currentMaritalStatus"}>&nbsp;{value}</label>
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
-                                    <span className="error-message"
-                                          id="currentMaritalStatus-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -437,7 +336,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={currentAddressOfCandidate}
                                         onChange={e => setCurrentAddressOfCandidate(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="currentAddressOfCandidate-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -449,7 +347,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={currentCountryOfCandidate}
                                         onChange={e => setCurrentCountryOfCandidate(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="currentCountryOfCandidate-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='currentAddressOfFamily' className='attribute'>
@@ -460,8 +357,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={currentAddressOfFamily}
                                         onChange={e => setCurrentAddressOfFamily(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message"
-                                          id="currentAddressOfFamily-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='contactNumber' className='attribute'>
@@ -472,7 +367,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={contactNumber}
                                         onChange={e => setContactNumber(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="contactNumber-error">Field is required</span>
                                 </Form.Group>
 
                             </Col>
@@ -492,17 +386,16 @@ const MatrimonialUpdateFormPage = () => {
                                                     type="radio"
                                                     name="immigrationStatusOfCandidate"
                                                     value={key}
-                                                    id={key + key + key + key + key}
                                                     checked={immigrationStatusOfCandidate === key}
                                                     onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
-                                                    className="mb-3"
+                                                    class="mb-3"
                                                 />
-                                                <label htmlFor={key + key + key + key + key}>&nbsp;{value}</label>
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
-                                    <span className="error-message" id="immigrationStatusOfCandidate-error">Field is required</span>
                                 </Form.Group>
+
 
                                 <Form.Group controlId='highestEducationOfCandidate' className='attribute'>
                                     <Form.Label>Highest Education Of Candidate</Form.Label>
@@ -512,7 +405,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={highestEducationOfCandidate}
                                         onChange={e => setHighestEducationOfCandidate(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="highestEducationOfCandidate-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='professionalDetailsOfCandidate' className='attribute'>
@@ -523,7 +415,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={professionalDetailsOfCandidate}
                                         onChange={e => setProfessionalDetailsOfCandidate(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="professionalDetailsOfCandidate-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='fatherFullName' className='attribute'>
@@ -534,7 +425,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={fatherFullName}
                                         onChange={e => setFatherFullName(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="fatherFullName-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='fatherContactNumber' className='attribute'>
@@ -545,8 +435,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={fatherContactNumber}
                                         onChange={e => setFatherContactNumber(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message"
-                                          id="fatherContactNumber-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -558,7 +446,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={motherFullName}
                                         onChange={e => setMotherFullName(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="motherFullName-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -570,7 +457,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={fatherNativeTown}
                                         onChange={e => setFatherNativeTown(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="fatherNativeTown-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -582,7 +468,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={motherNativeTown}
                                         onChange={e => setMotherNativeTown(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="motherNativeTown-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -594,8 +479,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={detailsOfSiblings}
                                         onChange={e => setDetailsOfSiblings(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message"
-                                          id="detailsOfSiblings-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='detailsOfMosal' className='attribute'>
@@ -606,7 +489,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={detailsOfMosal}
                                         onChange={e => setDetailsOfMosal(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="detailsOfMosal-error">Field is required</span>
                                 </Form.Group>
 
 
@@ -618,13 +500,11 @@ const MatrimonialUpdateFormPage = () => {
                                         value={maternalUncleName}
                                         onChange={e => setMaternalUncleName(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message"
-                                          id="maternalUncleName-error">Field is required</span>
                                 </Form.Group>
 
                                 {/*believeInKundli*/}
+                                <p className='attribute'>Believe in Kundli?</p>
                                 <Form.Group className='attribute'>
-                                    <Form.Label className='attribute'>Believe in Kundli?</Form.Label>
                                     <Row>
                                         {Object.entries(predbelieveInKundli).map(([key, value]) => (
                                             <Col md={2} mb={2} key={value}>
@@ -632,59 +512,15 @@ const MatrimonialUpdateFormPage = () => {
                                                     type="radio"
                                                     name="believeInKundli"
                                                     value={key}
-                                                    id={key + key}
                                                     checked={believeInKundli == key}
                                                     onChange={e => setBelieveInKundli(e.target.value)}
                                                 />
-                                                <label htmlFor={key + key}>&nbsp;{value}</label>
+                                                <label>{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
-                                    <span className="error-message" id="believeInKundli-error">Field is required</span>
                                 </Form.Group>
 
-                                {/*dietPreference*/}
-                                <Form.Group className='attribute'>
-                                    <Form.Label className='attribute'>Diet Preference?</Form.Label>
-                                    <Row>
-                                        {Object.entries(preDietPreference).map(([key, value]) => (
-                                            <Col md={4} mb={2} key={value}>
-                                                <input
-                                                    type="radio"
-                                                    name="dietPreference"
-                                                    value={key}
-                                                    id={'dietPreference'+key}
-                                                    checked={dietPreference == key}
-                                                    onChange={e => setDietPreference(e.target.value)}
-                                                />
-                                                <label htmlFor={'dietPreference'+key}>&nbsp;{value}</label>
-                                            </Col>
-                                        ))}
-                                    </Row>
-                                    <span className="error-message" id="dietPreference-error">Field is required</span>
-                                </Form.Group>
-
-                                {/*LifestyleHabits*/}
-                                {/*<Form.Group className='attribute'>
-                                    <Form.Label className='attribute'>Lifestyle Habits?</Form.Label>
-                                    <Row>
-                                        {Object.entries(preLifestyleHabits).map(([key, value]) => (
-                                            <Col md={6} className="mb-2" key={key}>
-                                                <input
-                                                    type="checkbox"
-                                                    name="lifestyleHabits"
-                                                    value={key}
-                                                    id={'lifestyleHabits' + key}
-                                                    // Check that lifestyleHabits is defined and is an array
-                                                    checked={Array.isArray(lifestyleHabits) && lifestyleHabits.includes(key)}
-                                                    onChange={() => handleCheckboxChange(key)}
-                                                />
-                                                <label htmlFor={'lifestyleHabits' + key}>&nbsp;{value}</label>
-                                            </Col>
-                                        ))}
-                                    </Row>>
-                                    <span className="error-message" id="lifestyleHabits-error">Field is required</span>
-                                </Form.Group>*/}
 
                                 <Form.Group controlId='expectationFromLifePartner' className='attribute'>
                                     <Form.Label>Expectation From LifePartner</Form.Label>
@@ -696,7 +532,6 @@ const MatrimonialUpdateFormPage = () => {
                                         value={expectationFromLifePartner}
                                         onChange={e => setExpectationFromLifePartner(e.target.value)}
                                     ></Form.Control>
-                                    <span className="error-message" id="expectationFromLifePartner-error">Field is required</span>
                                 </Form.Group>
 
                                 {!isUpdateMode ?
@@ -721,14 +556,14 @@ const MatrimonialUpdateFormPage = () => {
                             </Col>
                         </Row>
 
+
                         <Button
                             type='submit'
-                            variant='danger'
-                            style={{marginTop: '1rem', float: 'right'}}
+                            variant='primary'
+                            style={{marginTop: '1rem'}}
                         >
                             {isUpdateMode ? 'Update Matrimonial Profile' : 'Create Matrimonial Profile'}
                         </Button>
-
                     </Form>
                 </FormContainer>
             )}
@@ -736,4 +571,4 @@ const MatrimonialUpdateFormPage = () => {
     );
 };
 
-export default MatrimonialUpdateFormPage;
+export default MatrimonialProfilePage;

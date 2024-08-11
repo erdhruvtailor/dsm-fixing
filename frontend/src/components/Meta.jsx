@@ -12,7 +12,7 @@ const Meta = ({ title, description, keywords }) => {
 };
 
 Meta.defaultProps = {
-  title: 'NDCCP | NRIs Darji community common platform',
+  title: 'DCCP | Darji community common platform',
   description:
     'Common NRIs Darji community platform for Businesses, Connections, Events, Donations and Matrimonial.',
   keywords:

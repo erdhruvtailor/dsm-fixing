@@ -1,6 +1,6 @@
 import MatrimonialProfile from '../models/matrimonialProfileModel.js';
 import { deleteFile } from '../utils/file.js';
-import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 
 // @desc     Fetch All Products
@@ -15,10 +15,19 @@ const getMatrimonialAllProfiles = async (req, res, next) => {
     const limit = Number(req.query.limit) || maxLimit;
     const skip = Number(req.query.skip) || 0;
     const search = req.query.search || '';
+    const isMyPanel = convertToBoolean(req.query.isMyPanel);
 
-    const matrimonialProfiles = await MatrimonialProfile.find({
-      fullName: { $regex: search, $options: 'i' }
-    })
+    const token = req.cookies.jwt; // Assuming your JWT is stored in a cookie named 'jwt'
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Use your JWT secret
+    const userId = decoded.userId; // Assuming your JWT payload contains the userId
+
+    const query = { fullName: { $regex: search, $options: 'i' } };
+
+    if (isMyPanel) {
+      query.user = userId;
+    }
+
+    const matrimonialProfiles = await MatrimonialProfile.find(query)
         .limit(limit > maxLimit ? maxLimit : limit)
         .skip(skip > maxSkip ? maxSkip : skip < 0 ? 0 : skip);
 
@@ -31,7 +40,8 @@ const getMatrimonialAllProfiles = async (req, res, next) => {
       matrimonialProfiles,
       total,
       maxLimit,
-      maxSkip
+      maxSkip,
+      isMyPanel
     });
   } catch (error) {
     next(error);
@@ -90,7 +100,7 @@ const createMatrimonialProfile = async (req, res, next) => {
   try {
     const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, correctInformation } =
       req.body;
-    console.log(req.file);
+    // console.log(req.file);
     const matrimonialProfile = new MatrimonialProfile({
       user: req.user._id,
       image,
@@ -244,6 +254,16 @@ const deleteMatrimonialProfile = async (req, res, next) => {
   }
 };
 
+// Function to convert string to boolean
+function convertToBoolean(value) {
+  // Handle case where value is a non-empty string and explicitly 'true' or '1'
+  if (typeof value === 'string') {
+    value = value.toLowerCase();
+    return value === 'true' || value === '1';
+  }
+  // Handle case where value is a boolean or other types
+  return Boolean(value);
+}
 
 export {
   getMatrimonialAllProfiles,

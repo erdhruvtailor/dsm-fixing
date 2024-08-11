@@ -37,13 +37,28 @@ const UpdateUserFormPage = () => {
     e.preventDefault();
     try {
       const userData = { name, email, isAdmin };
-      const { data } = await updateUser({ userId, ...userData });
-      toast.success(data.message);
-      navigate('/admin/user-list');
-    } catch (error) {
-      toast.error(error?.data?.message || error.error);
+      const data = await updateUser({ userId, ...userData });
+
+      if (data) {
+        if(data.error) {
+          if (data.error && data.error.status === 400 && data.error.data.errors) {
+            // Extract validation messages and show them in a toast
+            const errorMessage = data.error.data.errors.map(error => error.msg).join(', ');
+            toast.error(errorMessage);
+          } else {
+            toast.error(data.error?.data?.message || data.error.data.message || 'An unknown error occurred');
+          }
+        } else {
+          toast.success(data.message);
+          navigate('/admin/user-list');
+        }
+      }
+
+    } catch (err) {
+      console.log(err);
     }
   };
+
   return (
     <>
       <Meta title={'User Update Form'} />

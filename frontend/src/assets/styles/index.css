@@ -7,6 +7,42 @@ main {
   margin: 0.1rem;
 }
 
+/*in matrimonial form*/
+.error {
+  border: 2px solid #f51919;
+}
+
+.error-message {
+  color: #dc3545;
+  display: none;
+}
+
+.attribute {
+  margin-bottom: 1rem;
+}
+
+.attribute .form-control {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.attribute .form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.attribute .form-label {
+  font-weight: bold;
+  color: #495057;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+}
+/*in matrimonial form*/
+
 .rating svg {
   color: #f8e825;
 }
@@ -52,7 +88,6 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
-
 .attribute {
   margin:15px 0 15px 0;
   color: gray; /* Text color */
@@ -61,4 +96,101 @@ table th {
 
 .label1 {
   color: gray; /* Text color */
+}
+.navbar-brand {
+  margin-right:-2rem !important;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker__input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+.react-calendar {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.MuiTextField-root {
+  width: 100%;
+}
+
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview img {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #f8f9fa;
+}
+
+.custom-file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.custom-file-input + .custom-file-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background-color: #007bff;
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.custom-file-input:focus + .custom-file-label,
+.custom-file-input + .custom-file-label:hover {
+  background-color: #0056b3;
+}
+.custom-file-label {
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Add this to your CSS file */
+.circular-button {
+  background-color: rgba(0, 0, 0, 0.2); /* Light black transparent background */
+  border-radius: 50%; /* Makes the button circular */
+  width: 40px; /* Set width to make it circular */
+  height: 40px; /* Set height to make it circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* Remove default border */
+  padding: 0; /* Remove default padding */
+  box-shadow: none; /* Remove default shadow */
+}
+
+.circular-button:hover {
+  background-color: rgba(0, 0, 0, 0.3); /* Slightly darker on hover */
+}
+
+.positioned-button {
+  position: absolute;
+  bottom: 10px; /* Adjust margin from the bottom as needed */
+  right: 10px; /* Adjust margin from the right as needed */
+  background-color: rgba(0, 0, 0, 0.2); /* Light black transparent background */
+  border-radius: 50%; /* Circular button */
+  width: 40px; /* Button size */
+  height: 40px; /* Button size */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* Remove default border */
+  padding: 0; /* Remove default padding */
+  box-shadow: none; /* Remove default shadow */
 }

@@ -1,16 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
-import {FaShoppingCart, FaUser, FaUsers} from 'react-icons/fa';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { FaUser, FaUsers, FaBusinessTime, FaBook, FaLink } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import SearchBox from './SearchBox';
+import ComingsoonPage from "../pages/ComingsoonPage";
 
 const Header = () => {
-  const { cartItems } = useSelector(state => state.cart);
   const { userInfo } = useSelector(state => state.auth);
   const [logoutApiCall] = useLogoutMutation();
   const dispatch = useDispatch();
@@ -20,7 +20,6 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
-
       navigate('/login');
       toast.success('Logout successful');
     } catch (error) {
@@ -29,72 +28,88 @@ const Header = () => {
   };
 
   return (
-    <Navbar
-      bg='warning'
-      variant='dark'
-      expand='md'
-      collapseOnSelect
-      className='fixed-top z-2 '
-    >
-      <Container>
-        <LinkContainer to='/'>
-          <Navbar.Brand><abbr title="NRIs Darji Community Common Platform"><img src="blacklogo.png" alt="" width="20%"/>NDCCP</abbr></Navbar.Brand>
-        </LinkContainer>
-        <Navbar.Toggle aria-controls='basic-navbar-nav' />
-        <Navbar.Collapse id='basic-navbar-nav'>
-          <Nav className='ms-auto m-2'>
-
-            <LinkContainer to='/aboutUs'>
-              <Nav.Link>
-                <FaUsers style={{ marginRight: '5px' }} />
-                About Us
-              </Nav.Link>
-            </LinkContainer>
-
-            {userInfo ? (
-            <LinkContainer to='/matrimonialProfile'>
-              <Nav.Link>
-                <FaUser style={{ marginRight: '5px' }} />
-                Matrimonial Panel
-              </Nav.Link>
-            </LinkContainer>
-                ) : ('')}
-
-            {userInfo ? (
-
-              <NavDropdown title={`Hello👋, ${userInfo.name}`} id='username'>
-                <LinkContainer to='/profile'>
-                  <NavDropdown.Item>Profile</NavDropdown.Item>
-                </LinkContainer>
-                <NavDropdown.Item onClick={logoutHandler}>
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            ) : (
-              <LinkContainer to='/login'>
+      <Navbar
+          bg='danger'
+          variant='dark'
+          expand='md'
+          collapseOnSelect
+          className='fixed-top z-2'
+      >
+        <Container>
+          <LinkContainer to='/'>
+            <Navbar.Brand>
+              <abbr title="Darji Community Common Platform">
+                <img src="/blacklogo.png" alt="" width="20%" /> DCCP
+              </abbr>
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Nav className='ms-auto m-2'>
+              <LinkContainer to='/aboutUs'>
                 <Nav.Link>
-                  <FaUser style={{ marginRight: '5px' }} />
-                  Sign In
+                  <FaUsers style={{ marginRight: '5px' }} />
+                  About Us
                 </Nav.Link>
               </LinkContainer>
-            )}
-            {/* {userInfo && userInfo.isAdmin && (
-                <NavDropdown title='Admin' id='adminmenu'>
-                  <LinkContainer to='/admin/product-list'>
-                    <NavDropdown.Item>Products</NavDropdown.Item>
+
+              {userInfo && (
+                  <NavDropdown title={`Hello👋, ${userInfo.name}`} id='username'>
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <LinkContainer to='/matrimonialHomePage'>
+                      <NavDropdown.Item>
+                        <FaUser style={{ marginRight: '5px' }} />
+                        Matrimonial Panel
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+              )}
+
+              <NavDropdown title="Explore" id='explore-dropdown'>
+                <LinkContainer to='/matrimonialHomePage'>
+                  <NavDropdown.Item>
+                    <FaUser style={{ marginRight: '5px' }} />
+                    Matrimonial Panel
+                  </NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to='/ComingsoonPage'>
+                  <NavDropdown.Item>
+                    <FaBusinessTime style={{ marginRight: '5px' }} />
+                    Business Panel
+                  </NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to='/ComingsoonPage'>
+                  <NavDropdown.Item>
+                    <FaBook style={{ marginRight: '5px' }} />
+                    Blog Panel
+                  </NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to='/ComingsoonPage'>
+                  <NavDropdown.Item>
+                    <FaLink style={{ marginRight: '5px' }} />
+                    Connections Panel
+                  </NavDropdown.Item>
+                </LinkContainer>
+              </NavDropdown>
+
+              {!userInfo && (
+                  <LinkContainer to='/login'>
+                    <Nav.Link>
+                      <FaUser style={{ marginRight: '5px' }} />
+                      Sign In
+                    </Nav.Link>
                   </LinkContainer>
-                  <LinkContainer to='/admin/order-list'>
-                    <NavDropdown.Item>Orders</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/user-list'>
-                    <NavDropdown.Item>Users</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
-              )} */}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
   );
 };
 

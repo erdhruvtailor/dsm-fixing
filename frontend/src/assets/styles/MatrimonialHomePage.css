@@ -1,0 +1,52 @@
+/* MatrimonialHomePage.css */
+
+/* Styles for desktop */
+@media (min-width: 992px) {
+    .page-title {
+        display: inline-block;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .button-container .btn-responsive {
+        margin-left: 10px;
+    }
+}
+
+/* Styles for mobile */
+@media (max-width: 991px) {
+    .page-title {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-container .btn-responsive {
+        margin-bottom: 10px;
+    }
+}
+
+/* MatrimonialHomePage.css */
+
+/* Fixed height for card images */
+.custom-card-img {
+    height: 200px; /* Adjust the height as needed */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+/* Ensure card image container is responsive */
+.custom-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

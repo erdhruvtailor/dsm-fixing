@@ -730,7 +730,8 @@ progress {
 
 .img-fluid {
   max-width: 100%;
-  height: auto;
+  /*height: auto;*/
+  height: 200px;
 }
 
 .img-thumbnail {
@@ -4051,7 +4052,8 @@ fieldset:disabled .btn {
 .navbar > .container-xl,
 .navbar > .container-xxl {
   display: flex;
-  flex-wrap: inherit;
+  /*flex-wrap: inherit;*/
+  flex-wrap: unset;
   align-items: center;
   justify-content: space-between;
 }
@@ -12117,4 +12119,8 @@ fieldset:disabled .btn {
   .d-print-none {
     display: none !important;
   }
+}
+
+.error {
+  border: 2px solid red;
 }

@@ -7,6 +7,7 @@ import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import FormContainer from '../components/FormContainer';
+import FormContainer8 from '../components/FormContainer8';
 import Loader from '../components/Loader';
 import Meta from '../components/Meta';
 
@@ -49,7 +50,7 @@ const LoginPage = () => {
     }
   };
   return (
-    <FormContainer>
+    <FormContainer8>
       <Meta title={'Sign In'} />
       <h1>Sign In</h1>
       <Form onSubmit={submitHandler}>
@@ -99,7 +100,7 @@ const LoginPage = () => {
         </Row>
         <Button
           className='mb-3 w-100'
-          variant='warning'
+          variant='danger'
           type='submit'
           disabled={isLoading}
         >
@@ -117,7 +118,7 @@ const LoginPage = () => {
           </Link>
         </Col>
       </Row>
-    </FormContainer>
+    </FormContainer8>
   );
 };
 

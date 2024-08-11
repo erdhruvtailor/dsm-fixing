@@ -1,43 +1,33 @@
-import React, {useEffect, useState} from 'react';
-
+import React, { useState } from 'react';
 import {
     Row,
     Col,
     ListGroup,
     Button,
     Image,
+    Modal,
     Card,
-    Form,
-    ListGroupItem, Table
 } from 'react-bootstrap';
-import {Link, useParams, useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { format, parseISO } from 'date-fns';
+import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Meta from '../components/Meta';
-import {LinkContainer} from "react-router-bootstrap";
 import {
     useGetMatrimonialProfileDetailsQuery,
-    useGetMatrimonialProfileQuery
 } from "../slices/matrimonialProfilesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import {FaEdit, FaRegEye, FaStreetView, FaTrash} from "react-icons/fa";
-import Rating from "../components/Rating";
-import {addCurrency} from "../utils/addCurrency";
-import Paginate from "../components/Paginate";
+import { FaBackward, FaFilePdf } from "react-icons/fa";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const MatrimonialProfilePage = () => {
-    const {id: matrimonialProfileId} = useParams();
-    const {userInfo} = useSelector(state => state.auth);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPage, setTotalPage] = useState(0);
-    const [total, setTotal] = useState(0);
-    const [limit, setLimit] = useState(0);
-    const [skip, setSkip] = useState(0);
-
-    const {data, isLoading2, error2} = useGetMatrimonialProfileQuery({
-        limit,
-        skip
-    });
+    const { id: matrimonialProfileId } = useParams();
+    const { userInfo } = useSelector(state => state.auth);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const {
         data: matrimonialProfile,
@@ -45,180 +35,180 @@ const MatrimonialProfilePage = () => {
         error
     } = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
 
-    useEffect(() => {
-        if (data) {
-            setLimit(8);
-            setSkip((currentPage - 1) * limit);
-            setTotal(data.total);
-            setTotalPage(Math.ceil(total / limit));
-        }
-    }, [currentPage, data, limit, total]);
+    var formattedBirthDate = "";
+    if (matrimonialProfile?.birthDate) {
+        const isoDateString = matrimonialProfile.birthDate;
+        const parsedDate = parseISO(isoDateString);
+        formattedBirthDate = format(parsedDate, 'MMM dd, yyyy');
+    }
 
-    const pageHandler = pageNum => {
-        if (pageNum >= 1 && pageNum <= totalPage && pageNum !== currentPage) {
-            setCurrentPage(pageNum);
-        }
+    const generatePDF = () => {
+        const input = document.getElementById('profile-content');
+        html2canvas(input, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`${matrimonialProfile.fullName}.pdf`);
+        });
     };
+
+    console.log(matrimonialProfile);
 
     return (
         <>
-
             <Row className='align-items-center'>
                 <Col>
-                    <Meta title={'Matrimonial Profile'}/>
-                    <h3>Matrimonial Candidate Detail</h3>
+                    <Meta title={'Matrimonial Profile'} />
+                    <Link to='/matrimonialHomePage' className='btn btn-light my-3'>
+                        <FaBackward size={20} /> &nbsp; Back
+                    </Link>
                 </Col>
-                <Col className='text-end'>
-                    {/*<LinkContainer to={'/matrimonialProfile/update/'+matrimonialProfileId}>*/}
-                    <LinkContainer to={'/matrimonialProfile/create/'}>
-                        <Button className='my-3' variant='default'>Make Matrimonial Profile</Button>
-                    </LinkContainer>
+                <Col className="d-flex justify-content-end">
+                    <Button variant="primary" onClick={generatePDF} className="my-3">
+                        <FaFilePdf size={20} /> &nbsp; Download PDF
+                    </Button>
                 </Col>
             </Row>
 
-
             {isLoading ? (
-                <Loader/>
-            ) : matrimonialProfileId ? "" : (
-                <Row>
-                    {data.matrimonialProfiles.map(matrimonialProfile => (
-                        <Col key={matrimonialProfile._id} sm={12} md={6} lg={4} xl={3}>
-                            <Card className='my-3 p-3 rounded text-center'>
-                                <Link
-                                    to={`/matrimonialProfile/${matrimonialProfile._id}`}
-                                    style={{textDecoration: 'none'}}
-                                    className='text-dark'
-                                >
-                                    <Card.Img
-                                        variant='top'
-                                        src={matrimonialProfile.image}
-                                        style={{height: '200px', objectFit: 'contain'}}
-                                    />
-                                    <Card.Body>
-                                        <Card.Title as='div' className='product-title'>
-                                            <h2><strong>{matrimonialProfile.fullName}</strong></h2>
-                                        </Card.Title>
+                <Loader />
+            ) : error ? (
+                <Message variant="danger">{error}</Message>
+            ) : (
+                <div id="profile-content">
+                    <Meta title={matrimonialProfile.fullName} description={matrimonialProfile.fullName} />
 
-                                        <Card.Text
-                                            as='p'>{matrimonialProfile.currentAddressOfCandidate}</Card.Text>
-                                    </Card.Body>
-                                </Link>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            )}
+                    <Card className="mb-4">
+                        <Card.Body>
+                            <Row>
+                                <Col md={4}>
+                                    <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Image
+                                            src={matrimonialProfile.image}
+                                            alt={matrimonialProfile.fullName}
+                                            fluid
+                                            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
+                                            onClick={handleShow}
+                                        />
+                                    </div>
 
-            {totalPage > 1 && (
-                <Paginate
-                    currentPage={currentPage}
-                    totalPage={totalPage}
-                    pageHandler={pageHandler}
-                />
-            )}
+                                    <Modal show={show} onHide={handleClose} dialogClassName="modal-50w" centered>
+                                        <Modal.Body
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                height: '100%'
+                                            }}
+                                        >
+                                            <img
+                                                src={matrimonialProfile.image}
+                                                alt={matrimonialProfile.fullName}
+                                                style={{ width: '100%', height: 'auto' }}
+                                            />
+                                        </Modal.Body>
+                                    </Modal>
+                                </Col>
+                                <Col md={8}>
+                                    <Card className="mb-4">
+                                        <Card.Header as="h3">{matrimonialProfile.fullName}</Card.Header>
+                                        <Card.Body>
+                                            <ListGroup variant='flush'>
+                                                <ListGroup.Item>
+                                                    <b>Birth Information:</b><br />
+                                                    <p>Birth Date: {formattedBirthDate}</p>
+                                                    <p>Birth Time: {matrimonialProfile.birthTime}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Birth Place: {matrimonialProfile.birthPlace}
+                                                    </p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Physical appearance:</b><br />
+                                                    <p>Height: {matrimonialProfile.height}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Weight: {matrimonialProfile.weight}
+                                                    </p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Current Information:</b><br />
+                                                    <p>Marital Status: {matrimonialProfile.currentMaritalStatus}</p>
+                                                    <p>Address Of Candidate: {matrimonialProfile.currentAddressOfCandidate}</p>
+                                                    <p>Address Of Family: {matrimonialProfile.currentAddressOfFamily}</p>
+                                                    <p>Contact Number: {matrimonialProfile.contactNumber}</p>
+                                                    <p>Immigration Status: {matrimonialProfile.immigrationStatusOfCandidate}</p>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
 
+                            <Row>
+                                <Col md={6}>
+                                    <Card className="mb-4">
+                                        <Card.Body>
+                                            <ListGroup variant='flush'>
+                                                <ListGroup.Item>
+                                                    <b>Family Information:</b><br />
+                                                    <p>Father FullName: {matrimonialProfile.fatherFullName}</p>
+                                                    <p>Father Contact Number: {matrimonialProfile.fatherContactNumber}</p>
+                                                    <p>Mother FullName: {matrimonialProfile.motherFullName}</p>
+                                                    <p>Father NativeTown: {matrimonialProfile.fatherNativeTown}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother NativeTown: {matrimonialProfile.motherNativeTown}
+                                                    </p>
+                                                    <p>Details Of Siblings: {matrimonialProfile.detailsOfSiblings}</p>
+                                                    <p>Maternal UncleName: {matrimonialProfile.maternalUncleName}</p>
+                                                    <p>Details Of Mosal: {matrimonialProfile.detailsOfMosal}</p>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
 
-            {isLoading ? (
-                <Loader/>
-            ) : error ? "" : (
-                <>
+                                <Col md={6}>
+                                    <Card className="mb-4">
+                                        <Card.Body>
+                                            <ListGroup variant='flush'>
+                                                <ListGroup.Item>
+                                                    <b>Education:</b><br />
+                                                    <p>{matrimonialProfile.highestEducationOfCandidate}</p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Profession/Occupation:</b><br />
+                                                    <p>{matrimonialProfile.professionalDetailsOfCandidate}</p>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
 
-                    <Meta title={matrimonialProfile.fullName} description={matrimonialProfile.fullName}/>
-
-                    <Row>
-                        <Col md={4}>
-                            <Image src={matrimonialProfile.image} alt={matrimonialProfile.fullName} fluid/>
-                        </Col>
-                        <Col md={5}>
-
-                            <Col variant='flush'>
-
-                                <ListGroup.Item>
-                                    <h3>{matrimonialProfile.fullName}</h3>
-                                </ListGroup.Item>
-
-                                <ListGroup.Item>
-                                    <b className="label1">Birth Information:</b><br/><br/>
-                                    {/*<p> Gender: {matrimonialProfile.gender}</p>*/}
-                                    <p>Birth Date: {matrimonialProfile.birthDate}</p>
-                                    <p>Birth Time : {matrimonialProfile.birthTime}
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Birth Place
-                                        : {matrimonialProfile.birthPlace}</p>
-                                </ListGroup.Item>
-                            </Col>
-                        </Col>
-
-                        <Col md={3}>
-                            <Col variant='flush'>
-                                <ListGroup.Item>
-                                    <br/> <br/>
-                                    <b className="label1">Physical appearance:</b><br/><br/>
-
-                                    <p>Height : {matrimonialProfile.height}
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Weight
-                                        : {matrimonialProfile.weight}</p>
-                                </ListGroup.Item>
-                            </Col>
-                        </Col>
-                    </Row>
-
-
-                    <Row>
-                        <Col md={4}>
-                        </Col>
-                        <Col md={5}>
-                            <ListGroup>
-                                <ListGroup.Item>
-
-                                    <b className="label1">Current Information:</b><br/><br/>
-
-                                    <p>Marital Status : {matrimonialProfile.currentMaritalStatus}</p>
-                                    <p>Address Of Candidate
-                                        : {matrimonialProfile.currentAddressOfCandidate}</p>
-                                    <p>Address Of Family : {matrimonialProfile.currentAddressOfFamily}</p>
-                                    <p>Contact Number : {matrimonialProfile.contactNumber}</p>
-                                    <p>Immigration Status
-                                        : {matrimonialProfile.immigrationStatusOfCandidate}</p>
-                                </ListGroup.Item>
-
-                                <ListGroup.Item>
-                                    <b className="label1">Family Information:</b><br/><br/>
-                                    <p>Father FullName : {matrimonialProfile.fatherFullName}</p>
-                                    <p>Father Contact Number : {matrimonialProfile.fatherContactNumber}</p>
-                                    <p>Mother FullName : {matrimonialProfile.motherFullName}</p>
-                                    <p>Father NativeTown : {matrimonialProfile.fatherNativeTown}
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother
-                                        NativeTown : {matrimonialProfile.motherNativeTown}</p>
-                                    <p>Details Of Siblings : {matrimonialProfile.detailsOfSiblings}</p>
-                                    <p>Maternal UncleName : {matrimonialProfile.maternalUncleName}</p>
-                                    <p>Details Of Mosal : {matrimonialProfile.detailsOfMosal}</p>
-                                </ListGroup.Item>
-
-                                <ListGroup.Item>
-                                    <p>Interests : {matrimonialProfile.interests}</p>
-                                    <p>Believe In Kundli : {matrimonialProfile.believeInKundli}</p>
-                                    <p>Expectation From LifePartner
-                                        : {matrimonialProfile.expectationFromLifePartner}</p>
-                                </ListGroup.Item>
-                            </ListGroup>
-                        </Col>
-
-                        <Col md={3}>
-                            <ListGroup>
-                                <ListGroup.Item>
-                                    <b className="label1">Education:</b><br/><br/>
-                                    <p>{matrimonialProfile.highestEducationOfCandidate}</p>
-                                </ListGroup.Item>
-
-                                <ListGroup.Item>
-                                    <b className="label1">Profession/Occupation:</b><br/><br/>
-                                    <p>{matrimonialProfile.professionalDetailsOfCandidate}</p>
-                                </ListGroup.Item>
-                            </ListGroup>
-                        </Col>
-
-                    </Row>
-                </>
+                            <Row>
+                                <Col md={12}>
+                                    <Card className="mb-4">
+                                        <Card.Body>
+                                            <ListGroup variant='flush'>
+                                                <ListGroup.Item>
+                                                    <b>Interests:</b><br />
+                                                    <p>{matrimonialProfile.interests}</p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Believe In Kundli:</b><br />
+                                                    <p>{matrimonialProfile.believeInKundli}</p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Expectation From Life Partner:</b><br />
+                                                    <p>{matrimonialProfile.expectationFromLifePartner}</p>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </div>
             )}
         </>
     );
