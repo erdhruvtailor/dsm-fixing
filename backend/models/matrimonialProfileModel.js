@@ -171,16 +171,10 @@ const matrimonialProfileSchema = new mongoose.Schema(
         },
 
 //  dietPreference of the MatrimonialProfile
-        dietPreference: {
-            type: String,
-            // required: true
-        },
+        dietPreference: [{ type: String }],
 
 // lifestyleHabits of the MatrimonialProfile
-        lifestyleHabits: {
-            type: String,
-            // required: true
-        },
+        lifestyleHabits: [{ type: String }],
 
 // expectationFromLifePartner of the MatrimonialProfile
         expectationFromLifePartner: {

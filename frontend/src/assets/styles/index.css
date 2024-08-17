@@ -161,36 +161,3 @@ table th {
   color: #555;
 }
 
-/* Add this to your CSS file */
-.circular-button {
-  background-color: rgba(0, 0, 0, 0.2); /* Light black transparent background */
-  border-radius: 50%; /* Makes the button circular */
-  width: 40px; /* Set width to make it circular */
-  height: 40px; /* Set height to make it circular */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none; /* Remove default border */
-  padding: 0; /* Remove default padding */
-  box-shadow: none; /* Remove default shadow */
-}
-
-.circular-button:hover {
-  background-color: rgba(0, 0, 0, 0.3); /* Slightly darker on hover */
-}
-
-.positioned-button {
-  position: absolute;
-  bottom: 10px; /* Adjust margin from the bottom as needed */
-  right: 10px; /* Adjust margin from the right as needed */
-  background-color: rgba(0, 0, 0, 0.2); /* Light black transparent background */
-  border-radius: 50%; /* Circular button */
-  width: 40px; /* Button size */
-  height: 40px; /* Button size */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none; /* Remove default border */
-  padding: 0; /* Remove default padding */
-  box-shadow: none; /* Remove default shadow */
-}

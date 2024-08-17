@@ -18,9 +18,10 @@ import {
 } from "../slices/matrimonialProfilesApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { FaBackward, FaFilePdf } from "react-icons/fa";
+import { FaBackward, FaEdit, FaFilePdf } from "react-icons/fa";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import "../assets/styles/MatrimonialProfile.css";
 
 const MatrimonialProfilePage = () => {
     const { id: matrimonialProfileId } = useParams();
@@ -35,7 +36,7 @@ const MatrimonialProfilePage = () => {
         error
     } = useGetMatrimonialProfileDetailsQuery(matrimonialProfileId);
 
-    var formattedBirthDate = "";
+    let formattedBirthDate = "";
     if (matrimonialProfile?.birthDate) {
         const isoDateString = matrimonialProfile.birthDate;
         const parsedDate = parseISO(isoDateString);
@@ -55,23 +56,38 @@ const MatrimonialProfilePage = () => {
         });
     };
 
-    console.log(matrimonialProfile);
-
     return (
         <>
-            <Row className='align-items-center'>
+            <Row className="align-items-center">
                 <Col>
                     <Meta title={'Matrimonial Profile'} />
-                    <Link to='/matrimonialHomePage' className='btn btn-light my-3'>
+                    <Link to="/matrimonialHomePage" className="btn btn-light my-3">
                         <FaBackward size={20} /> &nbsp; Back
                     </Link>
                 </Col>
+
                 <Col className="d-flex justify-content-end">
-                    <Button variant="primary" onClick={generatePDF} className="my-3">
-                        <FaFilePdf size={20} /> &nbsp; Download PDF
-                    </Button>
+                    {matrimonialProfile && (
+                        <div className="d-flex align-items-center">
+                            <a
+                                href={`/matrimonialProfile/update/${matrimonialProfile._id}`}
+                                className="btn btn-outline-primary my-3 mx-2 d-flex align-items-center"
+                            >
+                                <FaEdit size={20} /> &nbsp; Edit
+                            </a>
+
+                            <Button
+                                variant="primary"
+                                onClick={generatePDF}
+                                className="my-3 d-flex align-items-center"
+                            >
+                                <FaFilePdf size={20} /> &nbsp; Download PDF
+                            </Button>
+                        </div>
+                    )}
                 </Col>
             </Row>
+
 
             {isLoading ? (
                 <Loader />
@@ -79,20 +95,24 @@ const MatrimonialProfilePage = () => {
                 <Message variant="danger">{error}</Message>
             ) : (
                 <div id="profile-content">
-                    <Meta title={matrimonialProfile.fullName} description={matrimonialProfile.fullName} />
+                    {matrimonialProfile && (
+                        <Meta title={matrimonialProfile.fullName} description={matrimonialProfile.fullName} />
+                    )}
 
-                    <Card className="mb-4">
+                    <Card>
                         <Card.Body>
                             <Row>
                                 <Col md={4}>
                                     <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Image
-                                            src={matrimonialProfile.image}
-                                            alt={matrimonialProfile.fullName}
-                                            fluid
-                                            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
-                                            onClick={handleShow}
-                                        />
+                                        {matrimonialProfile && (
+                                            <Image
+                                                src={matrimonialProfile.image}
+                                                alt={matrimonialProfile.fullName}
+                                                fluid
+                                                style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
+                                                onClick={handleShow}
+                                            />
+                                        )}
                                     </div>
 
                                     <Modal show={show} onHide={handleClose} dialogClassName="modal-50w" centered>
@@ -104,39 +124,41 @@ const MatrimonialProfilePage = () => {
                                                 height: '100%'
                                             }}
                                         >
-                                            <img
-                                                src={matrimonialProfile.image}
-                                                alt={matrimonialProfile.fullName}
-                                                style={{ width: '100%', height: 'auto' }}
-                                            />
+                                            {matrimonialProfile && (
+                                                <img
+                                                    src={matrimonialProfile.image}
+                                                    alt={matrimonialProfile.fullName}
+                                                    style={{ width: '100%', height: 'auto' }}
+                                                />
+                                            )}
                                         </Modal.Body>
                                     </Modal>
                                 </Col>
                                 <Col md={8}>
-                                    <Card className="mb-4">
-                                        <Card.Header as="h3">{matrimonialProfile.fullName}</Card.Header>
+                                    <Card>
+                                        <Card.Header as="h3">{matrimonialProfile?.fullName}</Card.Header>
                                         <Card.Body>
                                             <ListGroup variant='flush'>
                                                 <ListGroup.Item>
                                                     <b>Birth Information:</b><br />
                                                     <p>Birth Date: {formattedBirthDate}</p>
-                                                    <p>Birth Time: {matrimonialProfile.birthTime}
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Birth Place: {matrimonialProfile.birthPlace}
+                                                    <p>Birth Time: {matrimonialProfile?.birthTime}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Birth Place: {matrimonialProfile?.birthPlace}
                                                     </p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Physical appearance:</b><br />
-                                                    <p>Height: {matrimonialProfile.height}
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Weight: {matrimonialProfile.weight}
+                                                    <p>Height: {matrimonialProfile?.height}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Weight: {matrimonialProfile?.weight}
                                                     </p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Current Information:</b><br />
-                                                    <p>Marital Status: {matrimonialProfile.currentMaritalStatus}</p>
-                                                    <p>Address Of Candidate: {matrimonialProfile.currentAddressOfCandidate}</p>
-                                                    <p>Address Of Family: {matrimonialProfile.currentAddressOfFamily}</p>
-                                                    <p>Contact Number: {matrimonialProfile.contactNumber}</p>
-                                                    <p>Immigration Status: {matrimonialProfile.immigrationStatusOfCandidate}</p>
+                                                    <p>Marital Status: {matrimonialProfile?.currentMaritalStatus}</p>
+                                                    <p>Address Of Candidate: {matrimonialProfile?.currentAddressOfCandidate}</p>
+                                                    <p>Address Of Family: {matrimonialProfile?.currentAddressOfFamily}</p>
+                                                    <p>Contact Number: {matrimonialProfile?.contactNumber}</p>
+                                                    <p>Immigration Status: {matrimonialProfile?.immigrationStatusOfCandidate}</p>
                                                 </ListGroup.Item>
                                             </ListGroup>
                                         </Card.Body>
@@ -151,15 +173,15 @@ const MatrimonialProfilePage = () => {
                                             <ListGroup variant='flush'>
                                                 <ListGroup.Item>
                                                     <b>Family Information:</b><br />
-                                                    <p>Father FullName: {matrimonialProfile.fatherFullName}</p>
-                                                    <p>Father Contact Number: {matrimonialProfile.fatherContactNumber}</p>
-                                                    <p>Mother FullName: {matrimonialProfile.motherFullName}</p>
-                                                    <p>Father NativeTown: {matrimonialProfile.fatherNativeTown}
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother NativeTown: {matrimonialProfile.motherNativeTown}
+                                                    <p>Father FullName: {matrimonialProfile?.fatherFullName}</p>
+                                                    <p>Father Contact Number: {matrimonialProfile?.fatherContactNumber}</p>
+                                                    <p>Mother FullName: {matrimonialProfile?.motherFullName}</p>
+                                                    <p>Father NativeTown: {matrimonialProfile?.fatherNativeTown}
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Mother NativeTown: {matrimonialProfile?.motherNativeTown}
                                                     </p>
-                                                    <p>Details Of Siblings: {matrimonialProfile.detailsOfSiblings}</p>
-                                                    <p>Maternal UncleName: {matrimonialProfile.maternalUncleName}</p>
-                                                    <p>Details Of Mosal: {matrimonialProfile.detailsOfMosal}</p>
+                                                    <p>Details Of Siblings: {matrimonialProfile?.detailsOfSiblings}</p>
+                                                    <p>Maternal UncleName: {matrimonialProfile?.maternalUncleName}</p>
+                                                    <p>Details Of Mosal: {matrimonialProfile?.detailsOfMosal}</p>
                                                 </ListGroup.Item>
                                             </ListGroup>
                                         </Card.Body>
@@ -172,11 +194,11 @@ const MatrimonialProfilePage = () => {
                                             <ListGroup variant='flush'>
                                                 <ListGroup.Item>
                                                     <b>Education:</b><br />
-                                                    <p>{matrimonialProfile.highestEducationOfCandidate}</p>
+                                                    <p>{matrimonialProfile?.highestEducationOfCandidate}</p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Profession/Occupation:</b><br />
-                                                    <p>{matrimonialProfile.professionalDetailsOfCandidate}</p>
+                                                    <p>{matrimonialProfile?.professionalDetailsOfCandidate}</p>
                                                 </ListGroup.Item>
                                             </ListGroup>
                                         </Card.Body>
@@ -191,15 +213,15 @@ const MatrimonialProfilePage = () => {
                                             <ListGroup variant='flush'>
                                                 <ListGroup.Item>
                                                     <b>Interests:</b><br />
-                                                    <p>{matrimonialProfile.interests}</p>
+                                                    <p>{matrimonialProfile?.interests}</p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Believe In Kundli:</b><br />
-                                                    <p>{matrimonialProfile.believeInKundli}</p>
+                                                    <p>{matrimonialProfile?.believeInKundli}</p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Expectation From Life Partner:</b><br />
-                                                    <p>{matrimonialProfile.expectationFromLifePartner}</p>
+                                                    <p>{matrimonialProfile?.expectationFromLifePartner}</p>
                                                 </ListGroup.Item>
                                             </ListGroup>
                                         </Card.Body>

@@ -16,7 +16,7 @@ export const predImmigrationStatusOfCandidate = {
     Citizen: 'Citizen'
 };
 
-export const predbelieveInKundli = {
+export const predBelieveInKundli = {
     No: 'No',
     Yes: 'Yes'
 };
@@ -36,6 +36,21 @@ export const preLifestyleHabits = {
     formerSmoker: "Former Smoker",
     noSmokingAndAlcohol: "No Smoking And Alcohol"
 };
+
+export const topCountries = {
+    Canada: 'Canada',
+    India: 'India',
+    USA: 'United States of America',
+    UK: 'United Kingdom',
+    Australia: 'Australia',
+    NewZealand: 'NewZealand',
+    Germany: 'Germany',
+    France: 'France',
+    Kenya: 'Kenya',
+    Brazil: 'Brazil',
+    Other : 'Other'
+};
+
 
 export const preInterests = [ { value: 'music', label: 'Music 🎵' },
     { value: 'sports', label: 'Sports 🏅' },

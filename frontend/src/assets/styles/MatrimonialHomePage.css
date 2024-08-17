@@ -36,17 +36,54 @@
     }
 }
 
-/* MatrimonialHomePage.css */
-
-/* Fixed height for card images */
-.custom-card-img {
-    height: 200px; /* Adjust the height as needed */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-}
-
-/* Ensure card image container is responsive */
-.custom-card {
+/* Ensure consistent card dimensions and image size */
+.card-container {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center; /* Center cards horizontally */
 }
+
+.card {
+    width: 250px; /* Fixed width */
+    height: 350px; /* Fixed height */
+    margin: 10px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Ensures content stacks vertically */
+    overflow: hidden; /* Prevents content from overflowing */
+    box-sizing: border-box; /* Includes padding and border in the width and height */
+}
+
+.card img {
+    width: 100%;
+    height: 150px; /* Fixed height for image */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    border-radius: 8px 8px 0 0;
+}
+
+.card-content {
+    padding: 10px;
+    text-align: center;
+    flex-grow: 1; /* Expands to fill available space */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+a {
+    text-decoration: none!important;
+}
+
+/* Ensure cards are responsive */
+@media (max-width: 991px) {
+    .card {
+        max-width: 100%;
+        height: auto; /* Allow height to be auto-adjusted on smaller screens */
+    }
+}
+

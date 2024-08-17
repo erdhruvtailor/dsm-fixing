@@ -17,7 +17,7 @@ const loginUser = async (req, res, next) => {
     if (!user) {
       res.statusCode = 404;
       throw new Error(
-        'Invalid email address. Please check your email and try again.'
+          'Invalid email address. Please check your email and try again.'
       );
     }
 
@@ -26,7 +26,7 @@ const loginUser = async (req, res, next) => {
     if (!match) {
       res.statusCode = 401;
       throw new Error(
-        'Invalid password. Please check your password and try again.'
+          'Invalid password. Please check your password and try again.'
       );
     }
 
@@ -99,11 +99,15 @@ const logoutUser = (req, res) => {
 // @access   Private
 const getUserProfile = async (req, res, next) => {
   try {
+    // Ensure req.user and req.user._id are populated
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
+      return res.status(404).json({ message: 'User not found' });
     }
 
     res.status(200).json({
@@ -111,6 +115,12 @@ const getUserProfile = async (req, res, next) => {
       userId: user._id,
       name: user.name,
       email: user.email,
+      gender: user.gender,
+      dob: user.dob,
+      mobile: user.mobile,
+      address: user.address,
+      city: user.city,
+      country: user.country,
       isAdmin: user.isAdmin
     });
   } catch (error) {
@@ -206,7 +216,7 @@ const updateUser = async (req, res, next) => {
 // @access   Private
 const updateUserProfile = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, gender, dob, mobile, address, city, country } = req.body;
 
     const user = await User.findById(req.user._id);
 
@@ -217,6 +227,12 @@ const updateUserProfile = async (req, res, next) => {
 
     user.name = name || user.name;
     user.email = email || user.email;
+    user.gender = gender || user.gender;
+    user.dob = dob || user.dob;
+    user.mobile = mobile || user.mobile;
+    user.address = address || user.address;
+    user.city = city || user.city;
+    user.country = country || user.country;
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -292,8 +308,8 @@ const resetPasswordRequest = async (req, res, next) => {
     });
 
     res
-      .status(200)
-      .json({ message: 'Password reset email sent, please check your email.' });
+        .status(200)
+        .json({ message: 'Password reset email sent, please check your email.' });
   } catch (error) {
     next(error);
   }

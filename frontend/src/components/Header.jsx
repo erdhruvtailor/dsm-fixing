@@ -54,6 +54,35 @@ const Header = () => {
               </LinkContainer>
 
               {userInfo && (
+                  <NavDropdown title="Explore" id='explore-dropdown'>
+                    <LinkContainer to='/matrimonialHomePage'>
+                      <NavDropdown.Item>
+                        <FaUser style={{ marginRight: '5px' }} />
+                        Matrimonial Panel
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/ComingsoonPage'>
+                      <NavDropdown.Item>
+                        <FaBusinessTime style={{ marginRight: '5px' }} />
+                        Business Panel
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/ComingsoonPage'>
+                      <NavDropdown.Item>
+                        <FaBook style={{ marginRight: '5px' }} />
+                        Blog Panel
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/ComingsoonPage'>
+                      <NavDropdown.Item>
+                        <FaLink style={{ marginRight: '5px' }} />
+                        Connections Panel
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+              )}
+
+              {userInfo && (
                   <NavDropdown title={`Hello👋, ${userInfo.name}`} id='username'>
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>Profile</NavDropdown.Item>
@@ -61,42 +90,15 @@ const Header = () => {
                     <NavDropdown.Item onClick={logoutHandler}>
                       Logout
                     </NavDropdown.Item>
-                    <NavDropdown.Divider />
+                {/*    <NavDropdown.Divider />
                     <LinkContainer to='/matrimonialHomePage'>
                       <NavDropdown.Item>
                         <FaUser style={{ marginRight: '5px' }} />
                         Matrimonial Panel
                       </NavDropdown.Item>
-                    </LinkContainer>
+                    </LinkContainer>*/}
                   </NavDropdown>
               )}
-
-              <NavDropdown title="Explore" id='explore-dropdown'>
-                <LinkContainer to='/matrimonialHomePage'>
-                  <NavDropdown.Item>
-                    <FaUser style={{ marginRight: '5px' }} />
-                    Matrimonial Panel
-                  </NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to='/ComingsoonPage'>
-                  <NavDropdown.Item>
-                    <FaBusinessTime style={{ marginRight: '5px' }} />
-                    Business Panel
-                  </NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to='/ComingsoonPage'>
-                  <NavDropdown.Item>
-                    <FaBook style={{ marginRight: '5px' }} />
-                    Blog Panel
-                  </NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to='/ComingsoonPage'>
-                  <NavDropdown.Item>
-                    <FaLink style={{ marginRight: '5px' }} />
-                    Connections Panel
-                  </NavDropdown.Item>
-                </LinkContainer>
-              </NavDropdown>
 
               {!userInfo && (
                   <LinkContainer to='/login'>

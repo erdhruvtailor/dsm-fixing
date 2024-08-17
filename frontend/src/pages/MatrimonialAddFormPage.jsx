@@ -12,7 +12,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import {
-    predbelieveInKundli,
+    predBelieveInKundli,
     preDietPreference,
     preLifestyleHabits,
     predCurrentMaritalStatus,
@@ -676,7 +676,7 @@ const MatrimonialAddFormPage = () => {
                                 <Form.Group className='attribute'>
                                     <Form.Label className='attribute'>Believe in Kundli?</Form.Label>
                                     <Row>
-                                        {Object.entries(predbelieveInKundli).map(([key, value]) => (
+                                        {Object.entries(predBelieveInKundli).map(([key, value]) => (
                                             <Col md={2} mb={2} key={value}>
                                                 <input
                                                     type="radio"
@@ -694,7 +694,7 @@ const MatrimonialAddFormPage = () => {
                                 </Form.Group>
 
                                 {/*dietPreference*/}
-                                <Form.Group className='attribute'>
+                                <Form.Group controlId='dietPreference' className='attribute'>
                                     <Form.Label className='attribute'>Diet Preference?</Form.Label>
                                     <Row>
                                         {Object.entries(preDietPreference).map(([key, value]) => (
@@ -715,7 +715,7 @@ const MatrimonialAddFormPage = () => {
                                 </Form.Group>
 
                                 {/*LifestyleHabits*/}
-                                <Form.Group className='attribute'>
+                                <Form.Group controlId='lifestyleHabits' className='attribute'>
                                     <Form.Label className='attribute'>Lifestyle Habits?</Form.Label>
                                     <Row>
                                         {Object.entries(preLifestyleHabits).map(([key, value]) => (
@@ -744,7 +744,7 @@ const MatrimonialAddFormPage = () => {
                                         placeholder='Enter Expectation From Life Partner'
                                         value={expectationFromLifePartner}
                                         onChange={e => setExpectationFromLifePartner(e.target.value)}
-                                    ></Form.Control>
+                                    />
                                     <span className="error-message" id="expectationFromLifePartner-error">Field is required</span>
                                 </Form.Group>
 

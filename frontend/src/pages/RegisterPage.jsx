@@ -9,6 +9,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Meta from '../components/Meta';
+import FormContainer8 from "../components/FormContainer8";
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -60,7 +61,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer8>
       <Meta title={'Register'} />
       <h1>Register</h1>
       <Form onSubmit={submitHandler}>
@@ -120,7 +121,7 @@ const RegisterPage = () => {
         </Form.Group>
         <Button
           className='mb-3 w-100'
-          variant='warning'
+          variant='danger'
           type='submit'
           disabled={isLoading}
         >
@@ -138,7 +139,7 @@ const RegisterPage = () => {
           </Link>
         </Col>
       </Row>
-    </FormContainer>
+    </FormContainer8>
   );
 };
 

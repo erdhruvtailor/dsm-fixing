@@ -13,7 +13,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import {
-    predbelieveInKundli,
+    predBelieveInKundli,
     preDietPreference,
     preLifestyleHabits,
     predCurrentMaritalStatus,
@@ -224,13 +224,13 @@ const MatrimonialUpdateFormPage = () => {
                             }
                         } else {
                             toast.success(data.message);
-                            navigate('/matrimonialHomePage');
+                            // navigate('/matrimonialHomePage');
                         }
                     }
                 } catch (err) {
                 }
             }
-            navigate('/matrimonialHomePage');
+            // navigate('/matrimonialHomePage');
         } catch (errors) {
             toast.error(errors?.data?.message || errors.errors);
         }
@@ -626,7 +626,7 @@ const MatrimonialUpdateFormPage = () => {
                                 <Form.Group className='attribute'>
                                     <Form.Label className='attribute'>Believe in Kundli?</Form.Label>
                                     <Row>
-                                        {Object.entries(predbelieveInKundli).map(([key, value]) => (
+                                        {Object.entries(predBelieveInKundli).map(([key, value]) => (
                                             <Col md={2} mb={2} key={value}>
                                                 <input
                                                     type="radio"
@@ -664,27 +664,25 @@ const MatrimonialUpdateFormPage = () => {
                                     <span className="error-message" id="dietPreference-error">Field is required</span>
                                 </Form.Group>
 
-                                {/*LifestyleHabits*/}
-                                {/*<Form.Group className='attribute'>
+                                <Form.Group controlId='lifestyleHabits' className='attribute'>
                                     <Form.Label className='attribute'>Lifestyle Habits?</Form.Label>
                                     <Row>
                                         {Object.entries(preLifestyleHabits).map(([key, value]) => (
-                                            <Col md={6} className="mb-2" key={key}>
+                                            <Col md={6} mb={2} key={key}>
                                                 <input
                                                     type="checkbox"
                                                     name="lifestyleHabits"
                                                     value={key}
-                                                    id={'lifestyleHabits' + key}
-                                                    // Check that lifestyleHabits is defined and is an array
-                                                    checked={Array.isArray(lifestyleHabits) && lifestyleHabits.includes(key)}
+                                                    id={'lifestyleHabits'+key}
+                                                    checked={lifestyleHabits.includes(key)}
                                                     onChange={() => handleCheckboxChange(key)}
                                                 />
-                                                <label htmlFor={'lifestyleHabits' + key}>&nbsp;{value}</label>
+                                                <label htmlFor={'lifestyleHabits'+key}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
-                                    </Row>>
+                                    </Row>
                                     <span className="error-message" id="lifestyleHabits-error">Field is required</span>
-                                </Form.Group>*/}
+                                </Form.Group>
 
                                 <Form.Group controlId='expectationFromLifePartner' className='attribute'>
                                     <Form.Label>Expectation From LifePartner</Form.Label>

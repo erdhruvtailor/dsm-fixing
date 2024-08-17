@@ -98,7 +98,7 @@ const getMatrimonialProfile = async (req, res, next) => {
 // @access   Private/Admin
 const createMatrimonialProfile = async (req, res, next) => {
   try {
-    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, correctInformation } =
+    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, dietPreference, lifestyleHabits, correctInformation } =
       req.body;
     // console.log(req.file);
     const matrimonialProfile = new MatrimonialProfile({
@@ -131,6 +131,8 @@ const createMatrimonialProfile = async (req, res, next) => {
       detailsOfMosal,
       believeInKundli,
       expectationFromLifePartner,
+      dietPreference,
+      lifestyleHabits,
       correctInformation,
     });
     const createdMatrimonialProfile = await matrimonialProfile.save();
@@ -176,6 +178,8 @@ const updateMatrimonialProfile = async (req, res, next) => {
       detailsOfMosal,
       believeInKundli,
       expectationFromLifePartner,
+      dietPreference,
+      lifestyleHabits,
       correctInformation,
     } = req.body;
 
@@ -217,6 +221,8 @@ const updateMatrimonialProfile = async (req, res, next) => {
     matrimonialProfile.detailsOfMosal = detailsOfMosal || matrimonialProfile.detailsOfMosal;
     matrimonialProfile.believeInKundli = believeInKundli || matrimonialProfile.believeInKundli;
     matrimonialProfile.expectationFromLifePartner = expectationFromLifePartner || matrimonialProfile.expectationFromLifePartner;
+    matrimonialProfile.dietPreference = dietPreference || matrimonialProfile.dietPreference;
+    matrimonialProfile.lifestyleHabits = lifestyleHabits || matrimonialProfile.lifestyleHabits;
     matrimonialProfile.correctInformation = correctInformation || matrimonialProfile.correctInformation;
 
     const updatedMatrimonialProfile = await matrimonialProfile.save();
