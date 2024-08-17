@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
+// import Slider from 'react-slider';
 import {
     Row,
     Col,
     Button,
     Card,
     Form,
+    InputGroup,
 } from 'react-bootstrap';
 import {Link, useLocation} from 'react-router-dom';
 import Meta from '../components/Meta';
@@ -17,12 +19,12 @@ import Paginate from "../components/Paginate";
 import NoDataAnimation from '../components/NoDataAnimation';
 import {FaPlus, FaFilter} from "react-icons/fa6";
 import {FaEdit} from "react-icons/fa";
-import moment from "moment";
 import LazyLoad from 'react-lazyload';
 import {topCountries} from '../utils/preDefinedAttributes';
 import "../assets/styles/MatrimonialHomePage.css";
 import "../assets/styles/Pagination.css";
-
+import Slider from '@mui/material/Slider'; // Assuming you're using MUI Slider
+import moment from 'moment';
 
 // Filter options
 import {
@@ -48,6 +50,7 @@ const MatrimonialHomePage = ({showMyPanel}) => {
     const [selectedDietPreference, setSelectedDietPreference] = useState([]);
     const [selectedLifestyleHabits, setSelectedLifestyleHabits] = useState([]);
     const [selectedCountries, setSelectedCountries] = useState([]);
+    const [ageRange, setAgeRange] = useState([18, 80]);
     const [filtersVisible, setFiltersVisible] = useState(false);
 
     const isMyPanel = pathname.includes('my-panel');
@@ -64,6 +67,10 @@ const MatrimonialHomePage = ({showMyPanel}) => {
             setTotalPage(Math.ceil(data.total / limit));
         }
     }, [data, limit]);
+
+    const handleSliderChange = (event, newValue) => {
+        setAgeRange(newValue);
+    };
 
     const pageHandler = pageNum => {
         console.log("pageHandler called with:", pageNum);
@@ -114,12 +121,17 @@ const MatrimonialHomePage = ({showMyPanel}) => {
                 country => profile.currentAddressOfCandidate.toLowerCase().includes(country.toLowerCase()) ||
                     profile.currentCountryOfCandidate.toLowerCase().includes(country.toLowerCase())
             );
-            const matchesAge = searchAge === '' || calculateAge(profile.birthDate) === parseInt(searchAge, 10);
+            // const matchesAge = searchAge === '' || calculateAge(profile.birthDate) === parseInt(searchAge, 10);
+            const matchesAge = ageRange.length === 2 && (
+                calculateAge(profile.birthDate) >= ageRange[0] &&
+                calculateAge(profile.birthDate) <= ageRange[1]
+            );
+            const age = calculateAge(profile.birthDate);
             const matchesMaritalStatus = selectedMaritalStatus.length === 0 || selectedMaritalStatus.includes(profile.currentMaritalStatus);
             const matchesBelieveInKundli = selectedBelieveInKundli.length === 0 || selectedBelieveInKundli.includes(profile.believeInKundli);
             const matchesDietPreference = selectedDietPreference.length === 0 || selectedDietPreference.includes(profile.dietPreference);
             const matchesLifestyleHabits = selectedLifestyleHabits.length === 0 || selectedLifestyleHabits.some(habit => profile.lifestyleHabits.includes(habit));
-            return matchesName && matchesLocation && matchesAge && matchesMaritalStatus && matchesBelieveInKundli && matchesDietPreference && matchesLifestyleHabits;
+            return matchesName && matchesLocation && matchesAge && matchesMaritalStatus && matchesBelieveInKundli && matchesDietPreference && matchesLifestyleHabits && (age >= ageRange[0] && age <= ageRange[1]);
         });
     };
 
@@ -198,7 +210,7 @@ const MatrimonialHomePage = ({showMyPanel}) => {
                             ))}
                         </Form.Group>
                     </Col>
-                    <Col xs={12} md={4}>
+                    {/*<Col xs={12} md={4}>
                         <Form.Control
                             type="number"
                             placeholder="Search by age"
@@ -206,6 +218,30 @@ const MatrimonialHomePage = ({showMyPanel}) => {
                             onChange={(e) => setSearchAge(e.target.value)}
                             className="custom-input"
                         />
+                    </Col>*/}
+
+                    <Col xs={12} md={4}>
+                        <Form.Group>
+                            <Form.Label>Filter by Age</Form.Label>
+                            <InputGroup>
+                                <Slider
+                                    value={ageRange}
+                                    min={0}
+                                    max={100}
+                                    step={1}
+                                    onChange={handleSliderChange}
+                                    valueLabelDisplay="auto"
+                                    renderTrack={(props) => <div {...props} className="slider-track"/>}
+                                    renderThumb={(props) => <div {...props} className="slider-thumb"/>}
+                                />
+                                <Form.Control
+                                    type="text"
+                                    value={`${ageRange[0]} - ${ageRange[1]}`}
+                                    readOnly
+                                    className="age-range-display"
+                                />
+                            </InputGroup>
+                        </Form.Group>
                     </Col>
 
                     <Col xs={12} md={6} lg={4}>
