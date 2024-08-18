@@ -16,6 +16,15 @@ import Meta from '../components/Meta';
 import {
     useGetMatrimonialProfileDetailsQuery,
 } from "../slices/matrimonialProfilesApiSlice";
+import {
+    predBelieveInKundli,
+    predCurrentMaritalStatus,
+    predGender,
+    preDietPreference,
+    predImmigrationStatusOfCandidate,
+    preLifestyleHabits,
+    topCountries,
+} from '../utils/preDefinedAttributes';
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {FaBackward, FaEdit, FaFilePdf} from "react-icons/fa";
@@ -55,6 +64,25 @@ const MatrimonialProfilePage = () => {
             pdf.save(`${matrimonialProfile.fullName}.pdf`);
         });
     };
+
+    const currentMaritalStatusKey = matrimonialProfile?.currentMaritalStatus;
+    const currentMaritalStatusValue = predCurrentMaritalStatus[currentMaritalStatusKey];
+
+    const lifestyleHabitsKey = matrimonialProfile?.lifestyleHabits;
+    const lifestyleHabitsValue = preLifestyleHabits[lifestyleHabitsKey];
+
+    const currentCountryOfCandidateKey = matrimonialProfile?.currentCountryOfCandidate;
+    const currentCountryOfCandidateValue = topCountries[currentCountryOfCandidateKey];
+
+    const dietPreferenceKey = matrimonialProfile?.dietPreference;
+    const dietPreferenceValue = preDietPreference[dietPreferenceKey];
+
+    const believeInKundliKey = matrimonialProfile?.believeInKundli;
+    const believeInKundliValue = predBelieveInKundli[believeInKundliKey];
+
+    const immigrationStatusOfCandidateKey = matrimonialProfile?.immigrationStatusOfCandidate;
+    const immigrationStatusOfCandidateValue = predImmigrationStatusOfCandidate[immigrationStatusOfCandidateKey];
+
 
     return (
         <>
@@ -162,14 +190,16 @@ const MatrimonialProfilePage = () => {
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Current Information:</b><br/>
-                                                    <p>Marital Status: {matrimonialProfile?.currentMaritalStatus}</p>
+                                                    <p>Marital Status: {currentMaritalStatusValue}</p>
                                                     <p>Address Of
                                                         Candidate: {matrimonialProfile?.currentAddressOfCandidate}</p>
+                                                    <p>Country Of
+                                                        Candidate: {currentCountryOfCandidateValue}</p>
                                                     <p>Address Of
                                                         Family: {matrimonialProfile?.currentAddressOfFamily}</p>
                                                     <p>Contact Number: {matrimonialProfile?.contactNumber}</p>
                                                     <p>Immigration
-                                                        Status: {matrimonialProfile?.immigrationStatusOfCandidate}</p>
+                                                        Status: {immigrationStatusOfCandidateValue}</p>
                                                 </ListGroup.Item>
                                             </ListGroup>
                                         </Card.Body>
@@ -230,7 +260,15 @@ const MatrimonialProfilePage = () => {
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Believe In Kundli:</b><br/>
-                                                    <p>{matrimonialProfile?.believeInKundli}</p>
+                                                    <p>{believeInKundliValue}</p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Diet Preference:</b><br/>
+                                                    <p>{dietPreferenceValue}</p>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <b>Lifestyle Habits:</b><br/>
+                                                    <p>{lifestyleHabitsValue}</p>
                                                 </ListGroup.Item>
                                                 <ListGroup.Item>
                                                     <b>Expectation From Life Partner:</b><br/>

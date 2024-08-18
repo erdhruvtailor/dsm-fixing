@@ -23,7 +23,8 @@ import {
 } from '../utils/preDefinedAttributes';
 import {FaBackward} from "react-icons/fa6";
 import "../assets/styles/MatrimonialFormPage.css";
-import {generateRandomFilename} from "../utils/generateRandomFilename"; // Custom styles
+import {generateRandomFilename} from "../utils/generateRandomFilename";
+import {FaEdit, FaFilePdf} from "react-icons/fa"; // Custom styles
 
 const MatrimonialUpdateFormPage = () => {
     const {id: matrimonialProfileId} = useParams();
@@ -157,7 +158,7 @@ const MatrimonialUpdateFormPage = () => {
         // Add your validation rules here
         const validationRules = {
             email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), // Email format
-            fullName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            fullName: (value) => /^[a-zA-Z\s]+$/.test(value) && value.length <= 30, // Only letters and spaces
             birthPlace: (value) => value.length >= 2, // At least 2 characters
             height: (value) => !isNaN(value) && value > 0, // Positive number
             weight: (value) => !isNaN(value) && value > 0, // Positive number
@@ -306,9 +307,30 @@ const MatrimonialUpdateFormPage = () => {
     return (
         <>
             <Meta title={'Matrimonial Profile Form'}/>
-            <Link
-                to='/matrimonialHomePage' className='btn btn-light my-3'><FaBackward size={20}/> &nbsp; Back
-            </Link>
+
+            <Row className="align-items-center">
+                <Col xs={4}>
+                    <Meta title={'Matrimonial Profile'}/>
+                    <Link to="/matrimonialHomePage" className="btn btn-light my-3">
+                        <FaBackward size={20}/> &nbsp; Back
+                    </Link>
+                </Col>
+
+                <Col className="d-flex justify-content-end" xs={8}>
+                    {matrimonialProfile && (
+                        <div className="d-flex align-items-center">
+
+                            <a
+                                href={`/matrimonialProfile/${matrimonialProfile._id}`}
+                                className="btn btn-outline-primary my-3 mx-2 d-flex align-items-center"
+                            >
+                                Show
+                            </a>
+
+                        </div>
+                    )}
+                </Col>
+            </Row>
 
             {(isUpdateMatrimonialProfileLoading || isUploadImageLoading) && <Loader/>}
 

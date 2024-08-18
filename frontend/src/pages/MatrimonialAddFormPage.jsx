@@ -145,7 +145,7 @@ const MatrimonialAddFormPage = () => {
         // Add your validation rules here
         const validationRules = {
             email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), // Email format
-            fullName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            fullName: (value) => /^[a-zA-Z\s]+$/.test(value) && value.length <= 30, // Only letters and spaces
             birthPlace: (value) => value.length >= 2, // At least 2 characters
             height: (value) => !isNaN(value) && value > 0, // Positive number
             weight: (value) => !isNaN(value) && value > 0, // Positive number
