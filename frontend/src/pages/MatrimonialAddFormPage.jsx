@@ -19,6 +19,7 @@ import {
     predGender,
     preInterests,
     predImmigrationStatusOfCandidate,
+    topCountries
 } from '../utils/preDefinedAttributes';
 import {FaBackward, FaPlus} from "react-icons/fa6";
 import {generateRandomFilename} from '../utils/generateRandomFilename';
@@ -45,6 +46,7 @@ const MatrimonialAddFormPage = () => {
     const [currentMaritalStatus, setCurrentMaritalStatus] = useState('');
     const [currentAddressOfCandidate, setCurrentAddressOfCandidate] = useState('');
     const [currentCountryOfCandidate, setCurrentCountryOfCandidate] = useState('');
+    const [profileShowCountry, setProfileShowCountry] = useState('');
     const [currentAddressOfFamily, setCurrentAddressOfFamily] = useState('');
     const [contactNumber, setContactNumber] = useState('');
     const [immigrationStatusOfCandidate, setImmigrationStatusOfCandidate] = useState('');
@@ -114,6 +116,11 @@ const MatrimonialAddFormPage = () => {
         }
     };
 
+    const handleSelectChange = (e) => {
+        const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+        setProfileShowCountry(selectedOptions);
+    };
+
     /*const uploadFileHandler = async e => {
         const formData = new FormData();
         formData.append('image', e.target.files[0]);
@@ -129,39 +136,86 @@ const MatrimonialAddFormPage = () => {
     const submitHandler = async e => {
         e.preventDefault();
 
-        /*const fields = [
-            'image', 'email', 'fullName', 'gender', 'birthDate', 'birthTime', 'birthPlace', 'height', 'weight', 'interests',
-            'currentMaritalStatus', 'currentAddressOfCandidate', 'currentCountryOfCandidate', 'currentAddressOfFamily', 'contactNumber',
-            'immigrationStatusOfCandidate', 'highestEducationOfCandidate', 'professionalDetailsOfCandidate', 'fatherFullName', 'fatherContactNumber',
-            'motherFullName', 'fatherNativeTown', 'motherNativeTown', 'detailsOfSiblings', 'maternalUncleName', 'detailsOfMosal', 'believeInKundli','dietPreference', 'lifestyleHabits',
-            'expectationFromLifePartner', 'correctInformation'
+        const fields = [
+            'email', 'fullName', 'gender', 'birthDate', 'birthTime', 'birthPlace', 'height', 'weight', 'interests', 'currentMaritalStatus', 'currentAddressOfCandidate', 'currentCountryOfCandidate', 'profileShowCountry', 'currentAddressOfFamily', 'contactNumber', 'immigrationStatusOfCandidate', 'highestEducationOfCandidate', 'professionalDetailsOfCandidate', 'fatherFullName', 'fatherContactNumber', 'motherFullName', 'fatherNativeTown', 'motherNativeTown', 'detailsOfSiblings', 'maternalUncleName', 'detailsOfMosal', 'believeInKundli', 'dietPreference', 'lifestyleHabits', 'expectationFromLifePartner', 'correctInformation'
         ];
 
         let isValid = true;
+
+        // Add your validation rules here
+        const validationRules = {
+            email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), // Email format
+            fullName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            birthPlace: (value) => value.length >= 2, // At least 2 characters
+            height: (value) => !isNaN(value) && value > 0, // Positive number
+            weight: (value) => !isNaN(value) && value > 0, // Positive number
+            interests: (value) => value.length <= 500, // Maximum 500 characters
+            currentAddressOfCandidate: (value) => value.length <= 200, // Maximum 200 characters
+            currentAddressOfFamily: (value) => value.length <= 200, // Maximum 200 characters
+            contactNumber: (value) => /^[0-9]{10,15}$/.test(value), // Numeric and between 10 to 15 digits
+            highestEducationOfCandidate: (value) => value.length <= 100, // Maximum 100 characters
+            professionalDetailsOfCandidate: (value) => value.length <= 300, // Maximum 300 characters
+            fatherFullName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            fatherContactNumber: (value) => /^[0-9]{10,15}$/.test(value), // Numeric and between 10 to 15 digits
+            motherFullName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            fatherNativeTown: (value) => value.length <= 100, // Maximum 100 characters
+            motherNativeTown: (value) => value.length <= 100, // Maximum 100 characters
+            detailsOfSiblings: (value) => value.length <= 200, // Maximum 200 characters
+            maternalUncleName: (value) => /^[a-zA-Z\s]+$/.test(value), // Only letters and spaces
+            detailsOfMosal: (value) => value.length <= 300, // Maximum 300 characters
+            expectationFromLifePartner: (value) => value.length <= 500, // Maximum 500 characters
+            currentMaritalStatus: (value) => value.length > 0,
+            currentCountryOfCandidate: (value) => value.length > 0,
+            profileShowCountry: (value) => value.length > 0,
+            immigrationStatusOfCandidate: (value) => value.length > 0,
+            believeInKundli: (value) => value.length > 0,
+            dietPreference: (value) => value.length > 0,
+            lifestyleHabits: (value) => value.length > 0
+        };
 
         fields.forEach(field => {
             const element = document.getElementById(field);
             const errorElement = document.getElementById(`${field}-error`);
             if (!element) return;
 
-            if ((element.type === 'radio' || element.type === 'checkbox') && !document.querySelector(`input[name="${field}"]:checked`)) {
+            // console.log(field + " : " + element.type);
+
+            let fieldIsValid = true;
+
+            // Handling radio and checkbox groups
+            if (element.type === 'radio' || element.type === 'checkbox' || element.type === 'select-one' || element.type === 'select-multiple') {
+                const groupElements = document.querySelectorAll(`input[name="${field}"]`);
+                const isChecked = Array.from(groupElements).some(input => input.checked);
+                if (!isChecked) {
+                    fieldIsValid = false;
+                }
+            } else if (element.value.trim() === '') {
+                fieldIsValid = false;
+            } else if (validationRules[field] && !validationRules[field](element.value.trim())) {
+                fieldIsValid = false;
+            }
+
+            if (!fieldIsValid) {
                 element.classList.add('error');
-                if (errorElement) errorElement.style.display = 'inline';
-                isValid = false;
-            } else if (!element.value) {
-                element.classList.add('error');
-                if (errorElement) errorElement.style.display = 'inline';
+                if (errorElement) {
+                    errorElement.style.display = 'inline'; // Ensure the error message is visible
+                    errorElement.textContent = `Please enter a valid ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`; // Custom error message
+                }
                 isValid = false;
             } else {
                 element.classList.remove('error');
-                if (errorElement) errorElement.style.display = 'none';
+                if (errorElement) {
+                    errorElement.style.display = 'none'; // Hide the error message
+                    errorElement.textContent = ''; // Clear the error message text
+                }
             }
         });
+
 
         if (!isValid) {
             e.preventDefault();
             return false;
-        }*/
+        }
 
         const matrimonialProfileData = {
             image,
@@ -177,6 +231,7 @@ const MatrimonialAddFormPage = () => {
             currentMaritalStatus,
             currentAddressOfCandidate,
             currentCountryOfCandidate,
+            profileShowCountry,
             currentAddressOfFamily,
             contactNumber,
             immigrationStatusOfCandidate,
@@ -427,7 +482,7 @@ const MatrimonialAddFormPage = () => {
                                 <Form.Group controlId='height' className='attribute'>
                                     <Form.Label>Height</Form.Label>
                                     <Form.Control
-                                        type='text'
+                                        type='number'
                                         placeholder='Enter Height'
                                         value={height}
                                         onChange={e => setHeight(e.target.value)}
@@ -438,7 +493,7 @@ const MatrimonialAddFormPage = () => {
                                 <Form.Group controlId='weight' className='attribute'>
                                     <Form.Label>Weight</Form.Label>
                                     <Form.Control
-                                        type='text'
+                                        type='number'
                                         placeholder='Enter weight'
                                         value={weight}
                                         onChange={e => setWeight(e.target.value)}
@@ -493,13 +548,34 @@ const MatrimonialAddFormPage = () => {
 
                                 <Form.Group controlId='currentCountryOfCandidate' className='attribute'>
                                     <Form.Label>Current Country Of Candidate</Form.Label>
-                                    <Form.Control
-                                        type='text'
-                                        placeholder='Enter Current Country Of Candidate'
+                                    <Form.Select
                                         value={currentCountryOfCandidate}
                                         onChange={e => setCurrentCountryOfCandidate(e.target.value)}
-                                    ></Form.Control>
+                                    >
+                                        {Object.entries(topCountries).map(([key, value]) => (
+                                            <option key={key} value={key}>
+                                                {value}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                     <span className="error-message" id="currentCountryOfCandidate-error">Field is required</span>
+                                </Form.Group>
+
+                                <Form.Group controlId='profileShowCountry' className='attribute'>
+                                    <Form.Label>Which country profile should be Display? </Form.Label>
+                                    <Form.Select
+                                        multiple
+                                        value={profileShowCountry}
+                                        onChange={handleSelectChange}
+                                    >
+                                        {Object.entries(topCountries).map(([key, value]) => (
+                                            <option key={key} value={key}>
+                                                {value}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                    <span className="error-message"
+                                          id="profileShowCountry-error">Field is required</span>
                                 </Form.Group>
 
                                 <Form.Group controlId='currentAddressOfFamily' className='attribute'>
@@ -517,7 +593,7 @@ const MatrimonialAddFormPage = () => {
                                 <Form.Group controlId='contactNumber' className='attribute'>
                                     <Form.Label>Contact Number</Form.Label>
                                     <Form.Control
-                                        type='text'
+                                        type='number'
                                         placeholder='Enter Contact Number'
                                         value={contactNumber}
                                         onChange={e => setContactNumber(e.target.value)}
@@ -542,12 +618,13 @@ const MatrimonialAddFormPage = () => {
                                                     type="radio"
                                                     name="immigrationStatusOfCandidate"
                                                     value={key}
-                                                    id={key + key + key + key + key}
+                                                    id={key + "immigrationStatusOfCandidate"}
                                                     checked={immigrationStatusOfCandidate === key}
                                                     onChange={e => setImmigrationStatusOfCandidate(e.target.value)}
                                                     className="mb-3"
                                                 />
-                                                <label htmlFor={key + key + key + key + key}>&nbsp;{value}</label>
+                                                <label
+                                                    htmlFor={key + "immigrationStatusOfCandidate"}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -590,7 +667,7 @@ const MatrimonialAddFormPage = () => {
                                 <Form.Group controlId='fatherContactNumber' className='attribute'>
                                     <Form.Label>Father Contact Number</Form.Label>
                                     <Form.Control
-                                        type='text'
+                                        type='number'
                                         placeholder='Enter Father Contact Number'
                                         value={fatherContactNumber}
                                         onChange={e => setFatherContactNumber(e.target.value)}
@@ -682,11 +759,11 @@ const MatrimonialAddFormPage = () => {
                                                     type="radio"
                                                     name="believeInKundli"
                                                     value={key}
-                                                    id={key + key}
+                                                    id={key + "believeInKundli"}
                                                     checked={believeInKundli == key}
                                                     onChange={e => setBelieveInKundli(e.target.value)}
                                                 />
-                                                <label htmlFor={key + key}>&nbsp;{value}</label>
+                                                <label htmlFor={key + "believeInKundli"}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -703,11 +780,11 @@ const MatrimonialAddFormPage = () => {
                                                     type="radio"
                                                     name="dietPreference"
                                                     value={key}
-                                                    id={'dietPreference'+key}
+                                                    id={'dietPreference' + key}
                                                     checked={dietPreference == key}
                                                     onChange={e => setDietPreference(e.target.value)}
                                                 />
-                                                <label htmlFor={'dietPreference'+key}>&nbsp;{value}</label>
+                                                <label htmlFor={'dietPreference' + key}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
                                     </Row>
@@ -724,11 +801,11 @@ const MatrimonialAddFormPage = () => {
                                                     type="checkbox"
                                                     name="lifestyleHabits"
                                                     value={key}
-                                                    id={'lifestyleHabits'+key}
+                                                    id={'lifestyleHabits' + key}
                                                     checked={lifestyleHabits.includes(key)}
                                                     onChange={() => handleCheckboxChange(key)}
                                                 />
-                                                <label htmlFor={'lifestyleHabits'+key}>&nbsp;{value}</label>
+                                                <label htmlFor={'lifestyleHabits' + key}>&nbsp;{value}</label>
                                             </Col>
                                         ))}
                                     </Row>

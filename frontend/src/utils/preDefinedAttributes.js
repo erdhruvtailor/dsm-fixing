@@ -38,8 +38,8 @@ export const preLifestyleHabits = {
 };
 
 export const topCountries = {
-    Canada: 'Canada',
     India: 'India',
+    Canada: 'Canada',
     USA: 'United States of America',
     UK: 'United Kingdom',
     Australia: 'Australia',
@@ -50,7 +50,6 @@ export const topCountries = {
     Brazil: 'Brazil',
     Other : 'Other'
 };
-
 
 export const preInterests = [ { value: 'music', label: 'Music 🎵' },
     { value: 'sports', label: 'Sports 🏅' },

@@ -86,6 +86,8 @@ const matrimonialProfileSchema = new mongoose.Schema(
             // required: true
         },
 
+        profileShowCountry: [{ type: String }],
+
 // currentAddressOfFamily of the MatrimonialProfile
         currentAddressOfFamily: {
             type: String,

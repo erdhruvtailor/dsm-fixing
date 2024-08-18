@@ -79,14 +79,6 @@ a {
     text-decoration: none!important;
 }
 
-/* Ensure cards are responsive */
-@media (max-width: 991px) {
-    .card {
-        max-width: 100%;
-        height: auto; /* Allow height to be auto-adjusted on smaller screens */
-    }
-}
-
 .slider-track {
     background-color: #d3d3d3;
     height: 4px;
@@ -107,4 +99,211 @@ a {
     padding: 0.375rem 0.75rem;
     margin-top: 0.5rem;
     width: 100%;
+}
+
+
+/*for filter*/
+
+/* Desktop-specific adjustments */
+@media (min-width: 992px) {
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-check-label {
+        font-size: 1rem;
+    }
+
+    .slider-thumb {
+        width: 20px;
+        height: 20px;
+    }
+
+    .age-range-display {
+        font-size: 1rem;
+    }
+}
+
+/* Filter Container Styling */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Label Styling */
+.form-group > .form-label {
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Form Check Styling */
+.form-check {
+    margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+    accent-color: #28a745; /* Green color for checkboxes */
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+/* Input Group and Slider Styling */
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.slider-track {
+    background-color: #28a745;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.slider-thumb {
+    background-color: #28a745;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.age-range-display {
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    color: #343a40;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mb-4 {
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-check-label {
+        font-size: 0.85rem;
+    }
+}
+
+.custom-apply-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-apply-button:hover {
+    background-color: #0056b3;
+    cursor: pointer;
+}
+
+
+/* Mobile Styles Only */
+
+/* Adjust page title and buttons for mobile */
+@media (max-width: 991px) {
+    .page-title {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-container .btn-responsive {
+        margin-bottom: 10px;
+    }
+
+    /* Ensure cards are responsive */
+    .card-container {
+        justify-content: center; /* Center cards horizontally */
+    }
+
+    .card {
+        max-width: 100%;
+        height: auto; /* Allow height to be auto-adjusted on smaller screens */
+        margin: 10px;
+    }
+
+    .card img {
+        height: auto; /* Allow image height to adjust based on content */
+    }
+
+    .card-content {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .slider-track {
+        background-color: #d3d3d3;
+        height: 4px;
+        border-radius: 2px;
+        width: 100%;
+    }
+
+    .slider-thumb {
+        background-color: #007bff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+    }
+
+    .age-range-display {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 0.375rem 0.75rem;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .matrimonial-hide-desktop {
+        display: none;
+    }
+}
+
+/* Ensure the buttons are in a single row on mobile */
+@media (max-width: 576px) {
+    .button-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .button-container .btn-responsive {
+        flex-grow: 1;
+        margin: 0 4px;
+    }
+
+    .button-container .btn-responsive:first-child {
+        margin-left: 0;
+    }
+
+    .button-container .btn-responsive:last-child {
+        margin-right: 0;
+    }
 }

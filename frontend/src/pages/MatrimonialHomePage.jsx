@@ -40,7 +40,7 @@ const MatrimonialHomePage = ({showMyPanel}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
     const [total, setTotal] = useState(0);
-    const [limit, setLimit] = useState(8);
+    const [limit, setLimit] = useState(24);
     const [skip, setSkip] = useState(0);
     const [searchName, setSearchName] = useState('');
     const [searchLocation, setSearchLocation] = useState('');
@@ -139,9 +139,9 @@ const MatrimonialHomePage = ({showMyPanel}) => {
 
     return (
         <>
-            <Row className='align-items-center mb-4'>
+            <Row className='align-items-center mb-4 d-none d-md-flex'>
                 <Col>
-                    <Meta title={'Matrimonial Profile'}/>
+                    <Meta title={'Matrimonial Profile'} />
                     <h2 className="page-title">Matrimonial Candidate Detail</h2>
                 </Col>
                 <Col className='text-end'>
@@ -162,63 +162,88 @@ const MatrimonialHomePage = ({showMyPanel}) => {
 
                         <LinkContainer to="/matrimonialProfile/create">
                             <Button className="my-3 custom-btn btn-responsive">
-                                <FaPlus size={20} className="me-2"/>
+                                <FaPlus size={20} className="me-2" />
                                 Add Profile
                             </Button>
                         </LinkContainer>
 
                         <Button onClick={() => setFiltersVisible(!filtersVisible)}
                                 className="filter-toggle-btn btn-responsive">
-                            <FaFilter size={20}/>
+                            <FaFilter size={20} />
                             {filtersVisible ? ' Hide Filters' : ' Show Filters'}
                         </Button>
                     </div>
                 </Col>
             </Row>
 
+            {/*for mobile*/}
+            <Row className={`align-items-center mb-4 matrimonial-hide-desktop`}>
+                <Col>
+                    <Meta title={'Matrimonial Profile'}/>
+                    <h2 className="page-title">Matrimonial Candidate Detail</h2>
+                </Col>
+            </Row>
+            <Row className={`align-items-center mb-4 matrimonial-hide-desktop`}>
+                <div className="button-container">
+                    {showMyPanel ? (
+                        <LinkContainer to="/matrimonialHomePage">
+                            <Button className="my-3 custom-btn btn-responsive">
+                                All Matrimonial Profile
+                            </Button>
+                        </LinkContainer>
+                    ) : (
+                        <LinkContainer to="/matrimonialHomePage/my-panel">
+                            <Button className="my-3 custom-btn btn-responsive">
+                                My Post
+                            </Button>
+                        </LinkContainer>
+                    )}
+
+                    <LinkContainer to="/matrimonialProfile/create">
+                        <Button className="my-3 custom-btn btn-responsive">
+                            <FaPlus size={20} className="me-2" />
+                            Add Profile
+                        </Button>
+                    </LinkContainer>
+
+                    <Button
+                        onClick={() => setFiltersVisible(!filtersVisible)}
+                        className="filter-toggle-btn btn-responsive"
+                    >
+                        <FaFilter size={20} />
+                        {filtersVisible ? ' Hide Filters' : ' Show Filters'}
+                    </Button>
+                </div>
+            </Row>
+
+
+
             {filtersVisible && (
                 <Row className="mb-4">
-                    {/*<Col xs={12} md={4}>
-                        <Form.Control
-                            type="text"
-                            placeholder="Search by name"
-                            value={searchName}
-                            onChange={(e) => setSearchName(e.target.value)}
-                            className="custom-input"
-                        />
-                    </Col>*/}
-                    <Col xs={12} md={4}>
+
+                    <Col xs={12} md={6} lg={4}>
                         <Form.Group>
-                            <Form.Label>Filter by Location</Form.Label>
-                            {Object.entries(topCountries).map(([code, name]) => (
+                            <Form.Label>Believe in Kundli</Form.Label>
+                            {Object.entries(predBelieveInKundli).map(([key, value]) => (
                                 <Form.Check
-                                    key={code}
+                                    key={key}
                                     type="checkbox"
-                                    id={`location-${code}`}
-                                    label={name}
-                                    value={name}
-                                    checked={selectedCountries.includes(name)}
+                                    id={`believe-in-kundli-${key}`}
+                                    label={value}
+                                    value={key}
                                     onChange={(e) => {
                                         const {checked, value} = e.target;
-                                        setSelectedCountries(prev =>
+                                        setSelectedBelieveInKundli(prev =>
                                             checked
                                                 ? [...prev, value]
-                                                : prev.filter(country => country !== value)
+                                                : prev.filter(believe => believe !== value)
                                         );
                                     }}
+                                    checked={selectedBelieveInKundli.includes(key)}
                                 />
                             ))}
                         </Form.Group>
                     </Col>
-                    {/*<Col xs={12} md={4}>
-                        <Form.Control
-                            type="number"
-                            placeholder="Search by age"
-                            value={searchAge}
-                            onChange={(e) => setSearchAge(e.target.value)}
-                            className="custom-input"
-                        />
-                    </Col>*/}
 
                     <Col xs={12} md={4}>
                         <Form.Group>
@@ -268,25 +293,25 @@ const MatrimonialHomePage = ({showMyPanel}) => {
                         </Form.Group>
                     </Col>
 
-                    <Col xs={12} md={6} lg={4}>
+                    <Col xs={12} md={4}>
                         <Form.Group>
-                            <Form.Label>Believe in Kundli</Form.Label>
-                            {Object.entries(predBelieveInKundli).map(([key, value]) => (
+                            <Form.Label>Filter by Location</Form.Label>
+                            {Object.entries(topCountries).map(([code, name]) => (
                                 <Form.Check
-                                    key={key}
+                                    key={code}
                                     type="checkbox"
-                                    id={`believe-in-kundli-${key}`}
-                                    label={value}
-                                    value={key}
+                                    id={`location-${code}`}
+                                    label={name}
+                                    value={name}
+                                    checked={selectedCountries.includes(name)}
                                     onChange={(e) => {
                                         const {checked, value} = e.target;
-                                        setSelectedBelieveInKundli(prev =>
+                                        setSelectedCountries(prev =>
                                             checked
                                                 ? [...prev, value]
-                                                : prev.filter(believe => believe !== value)
+                                                : prev.filter(country => country !== value)
                                         );
                                     }}
-                                    checked={selectedBelieveInKundli.includes(key)}
                                 />
                             ))}
                         </Form.Group>
@@ -339,6 +364,16 @@ const MatrimonialHomePage = ({showMyPanel}) => {
                             ))}
                         </Form.Group>
                     </Col>
+
+                    <Col xs={12} className="d-flex justify-content-center mt-3">
+                        <Button
+                            className="custom-apply-button"
+                            onClick={() => setFiltersVisible(!filtersVisible)}
+                        >
+                            Apply Filters
+                        </Button>
+                    </Col>
+
                 </Row>
             )}
 

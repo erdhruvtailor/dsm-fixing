@@ -81,3 +81,37 @@
     transform: none;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .matrimonial-profile-card {
+        border-radius: 5px;
+    }
+
+    .matrimonial-profile-card .card-header {
+        font-size: 1.25rem;
+        padding: 10px;
+    }
+
+    .matrimonial-profile-card .card-body {
+        padding: 15px;
+    }
+
+    .matrimonial-profile-card .list-group-item {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .img-thumbnail {
+        border-radius: 3px;
+    }
+
+    .card {
+        margin: 10px 0 10px 0;
+        padding: 0;
+    }
+
+    #profile-content {
+        padding: 0;
+    }
+}

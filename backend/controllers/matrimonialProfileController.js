@@ -98,7 +98,7 @@ const getMatrimonialProfile = async (req, res, next) => {
 // @access   Private/Admin
 const createMatrimonialProfile = async (req, res, next) => {
   try {
-    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, dietPreference, lifestyleHabits, correctInformation } =
+    const { image, email, fullName, gender, birthDate, birthTime, birthPlace, height, weight, interests, currentMaritalStatus, currentAddressOfCandidate, currentCountryOfCandidate, profileShowCountry, currentAddressOfFamily, contactNumber, immigrationStatusOfCandidate, highestEducationOfCandidate, professionalDetailsOfCandidate, fatherFullName, fatherContactNumber, motherFullName, fatherNativeTown, motherNativeTown, detailsOfSiblings, maternalUncleName, detailsOfMosal, believeInKundli, expectationFromLifePartner, dietPreference, lifestyleHabits, correctInformation } =
       req.body;
     // console.log(req.file);
     const matrimonialProfile = new MatrimonialProfile({
@@ -116,6 +116,7 @@ const createMatrimonialProfile = async (req, res, next) => {
       currentMaritalStatus,
       currentAddressOfCandidate,
       currentCountryOfCandidate,
+      profileShowCountry,
       currentAddressOfFamily,
       contactNumber,
       immigrationStatusOfCandidate,
@@ -163,6 +164,7 @@ const updateMatrimonialProfile = async (req, res, next) => {
       currentMaritalStatus,
       currentAddressOfCandidate,
       currentCountryOfCandidate,
+      profileShowCountry,
       currentAddressOfFamily,
       contactNumber,
       immigrationStatusOfCandidate,
@@ -206,6 +208,7 @@ const updateMatrimonialProfile = async (req, res, next) => {
     matrimonialProfile.currentMaritalStatus = currentMaritalStatus || matrimonialProfile.currentMaritalStatus;
     matrimonialProfile.currentAddressOfCandidate = currentAddressOfCandidate || matrimonialProfile.currentAddressOfCandidate;
     matrimonialProfile.currentCountryOfCandidate = currentCountryOfCandidate || matrimonialProfile.currentCountryOfCandidate;
+    matrimonialProfile.profileShowCountry = profileShowCountry || matrimonialProfile.profileShowCountry;
     matrimonialProfile.currentAddressOfFamily = currentAddressOfFamily || matrimonialProfile.currentAddressOfFamily;
     matrimonialProfile.contactNumber = contactNumber || matrimonialProfile.contactNumber;
     matrimonialProfile.immigrationStatusOfCandidate = immigrationStatusOfCandidate || matrimonialProfile.immigrationStatusOfCandidate;
