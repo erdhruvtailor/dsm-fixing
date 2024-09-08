@@ -285,13 +285,13 @@ const resetPasswordRequest = async (req, res, next) => {
       throw new Error('User not found!');
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.REACT_APP_JWT_SECRET, {
       expiresIn: '15m'
     });
     const passwordResetLink = `https://mern-shop-abxs.onrender.com/reset-password/${user._id}/${token}`;
     console.log(passwordResetLink);
     await transporter.sendMail({
-      from: `"MERN Shop" ${process.env.EMAIL_FROM}`, // sender address
+      from: `"MERN Shop" ${process.env.REACT_APP_EMAIL_FROM}`, // sender address
       to: user.email, // list of receivers
       subject: 'Password Reset', // Subject line
       html: `<p>Hi ${user.name},</p>
@@ -323,7 +323,7 @@ const resetPassword = async (req, res, next) => {
     const { password } = req.body;
     const { id: userId, token } = req.params;
     const user = await User.findById(userId);
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
 
     if (!decodedToken) {
       res.statusCode = 401;

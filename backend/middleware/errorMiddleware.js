@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
 
   const responseBody = {
     message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
+    stack: process.env.REACT_APP_NODE_ENV === 'production' ? '🥞' : err.stack
   };
 
   console.error('Error: ', responseBody);

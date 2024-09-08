@@ -5,7 +5,7 @@ dotenv.config(); // Load environment variables
 
 const connectDB = async () => {
   try {
-    const connection = await mongoose.connect("mongodb://127.0.0.1:27017/MERN", {
+    const connection = await mongoose.connect(process.env.REACT_APP_MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -25,7 +25,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    const connection = await mongoose.connect(process.env.MONGO_URI);
+    const connection = await mongoose.connect(process.env.REACT_APP_MONGO_URI);
     // console.log(
     //   `MongoDB connected successfully on host: ${connection.connection.host}, database: ${connection.connection.db.databaseName}`
     // );

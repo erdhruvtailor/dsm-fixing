@@ -9,7 +9,7 @@ import userRoutes from './routes/userRoutes.js';
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
-const port = process.env.PORT || 5000;
+const port = process.env.REACT_APP_PORT || 5000;
 
 // Connect to MongoDB
 connectDB();
@@ -29,7 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/v1/users', userRoutes);
 
 //-------------------------------------
-if (process.env.NODE_ENV === 'production') {
+if (process.env.REACT_APP_NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')));
 
   //any app route that is not api will redirected to index.html

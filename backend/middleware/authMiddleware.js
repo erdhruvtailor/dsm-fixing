@@ -11,7 +11,7 @@ const protect = async (req, res, next) => {
       throw new Error('Authentication failed: Token not provided.');
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
 
     if (!decodedToken) {
       res.statusCode = 401;
