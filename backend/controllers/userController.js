@@ -1,5 +1,4 @@
 import User from '../models/userModel.js';
-import MatrimonialProfile from '../models/matrimonialProfileModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/generateToken.js';
