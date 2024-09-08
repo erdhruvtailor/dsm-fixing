@@ -1,6 +1,7 @@
 // Import necessary functions and slices from Redux Toolkit
 import { configureStore } from '@reduxjs/toolkit';
 import { apiSlice } from './slices/apiSlice';
+import authSliceReducer from './slices/authSlice';
 
 // Configure the Redux store
 const store = configureStore({
