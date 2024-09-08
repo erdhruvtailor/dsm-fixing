@@ -7,8 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { toast } from 'react-toastify';
-import SearchBox from './SearchBox';
-import ComingsoonPage from "../pages/ComingsoonPage";
 
 const Header = () => {
   const { userInfo } = useSelector(state => state.auth);
